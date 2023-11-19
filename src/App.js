@@ -115,7 +115,7 @@ function App() {
                     }}
                 >
                     <QuadCamera/>
-                    <List size="small" style={{fontSize: 12, maxHeight:'15em', overflowY:'auto'}}>
+                    <List size="small" style={{flex: 1, fontSize: 12, maxHeight:'15em', overflowY:'auto'}}>
                     {
                             messages.map(i => <List.Item>{i.topic+' '+i.message}</List.Item>).reverse()
                         }
