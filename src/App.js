@@ -6,52 +6,19 @@ import {
     AppstoreOutlined,
     VideoCameraOutlined,
 } from '@ant-design/icons';
-import ReactPlayer from 'react-player';
 import mqtt from 'mqtt';
 import { useEffect, useState} from 'react';
-import { useComponentSize } from "react-use-size";
+import QuadCamera from './components/QuadCamera';
 
 const { Header, Content, Sider } = Layout;
 
-function Player({x,y,w,h, ...props}){
-    return <ReactPlayer 
-    style={{position:'absolute', left: x, top: y}} width={w} height={h}
-    muted={true} playing={true} playsinline={true} playbackRate={1.05} {...props}
-    onPause={(v)=>{
-        //alert('pause');
-        //v.target.play();
-    }}
-    onError={(v)=>{
-        //alert('error');
-        //v.target.play();
-    }}
-    onEnded={(v)=>{
-        //alert('ended');
-        //v.target.play();
-    }}
-    />
-}
+
 
 function App() {
     const [client, setClient] = useState(null);
     const [connected, setConnected] = useState(false);
     const [messages, setMessages] = useState([]);
     const [collapsed, setCollapsed] = useState(false);
-    const {ref, height, width} = useComponentSize();
-
-    let vidWidth = (width)/2;
-    let vidHeight = vidWidth*(480/960);
-    let vidPad = 0;
-    if (height===undefined || width===undefined || height===null || width===null){
-        vidWidth=0;
-        vidHeight=0;
-    }else{
-        if (vidHeight*2>height){
-            vidHeight=(height)/2;
-            vidWidth=vidHeight*2;
-        }
-        vidPad = vidWidth*2-width;
-    }
 
     const {
         token: { colorBgContainer },
@@ -147,12 +114,7 @@ function App() {
                         backgroundColor: colorBgContainer
                     }}
                 >
-                    <Player x={ref.current?.offsetLeft-vidPad/2} y={ref.current?.offsetTop} w={vidWidth} h={vidHeight} url='http://192.168.1.14:4000/1cam.m3u8'/>
-                    <Player x={ref.current?.offsetLeft+vidWidth-vidPad/2} y={ref.current?.offsetTop} w={vidWidth} h={vidHeight} url='http://192.168.1.14:4000/2cam.m3u8'/>
-                    <Player x={ref.current?.offsetLeft-vidPad/2} y={ref.current?.offsetTop+vidHeight} w={vidWidth} h={vidHeight} url='http://192.168.1.14:4000/3cam.m3u8'/>
-                    <Player x={ref.current?.offsetLeft+vidWidth-vidPad/2} y={ref.current?.offsetTop+vidHeight} w={vidWidth} h={vidHeight} url='http://192.168.1.14:4000/4cam.m3u8'/>
-                    <div ref={ref} style={{flex:1}}>
-                    </div>
+                    <QuadCamera/>
                     <List size="small" style={{fontSize: 12, maxHeight:'15em', overflowY:'auto'}}>
                     {
                             messages.map(i => <List.Item>{i.topic+' '+i.message}</List.Item>).reverse()
