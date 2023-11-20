@@ -9,6 +9,8 @@ import {
 import mqtt from 'mqtt';
 import { useEffect, useState} from 'react';
 import QuadCamera from './components/QuadCamera';
+import SingleCamera from './components/SingleCamera';
+import MQTT from './components/MQTT';
 
 const { Header, Content, Sider } = Layout;
 
@@ -19,6 +21,7 @@ function App() {
     const [connected, setConnected] = useState(false);
     const [messages, setMessages] = useState([]);
     const [collapsed, setCollapsed] = useState(false);
+    const [selectedMenu, setSelectedMenu] = useState('quad');
 
     const {
         token: { colorBgContainer },
@@ -65,26 +68,24 @@ function App() {
 
     return (
         <Layout style={{ height: '100%' }}>
-            <Sider trigger={null} collapsible collapsed={collapsed} collapsedWidth={0}>
+            <Sider trigger={null} collapsible collapsed={true} collapsedWidth={collapsed?0:undefined}>
                 <Menu
+                    onSelect={({key})=>{console.log(key);setSelectedMenu(key);}}
                     theme="dark"
                     mode="inline"
-                    defaultSelectedKeys={['1']}
+                    defaultSelectedKeys={['quad']}
                     items={[
                         {
-                            key: '1',
-                            icon: <AppstoreOutlined />,
-                            label: 'nav 1',
+                            key: 'quad',
+                            icon: <AppstoreOutlined />
                         },
                         {
-                            key: '2',
-                            icon: <VideoCameraOutlined />,
-                            label: 'nav 2',
+                            key: 'single',
+                            icon: <VideoCameraOutlined />
                         },
                         {
-                            key: '3',
-                            icon: <UploadOutlined />,
-                            label: 'nav 3',
+                            key: 'mqtt',
+                            icon: <UploadOutlined />
                         },
                     ]}
                 />
@@ -114,12 +115,16 @@ function App() {
                         backgroundColor: colorBgContainer
                     }}
                 >
-                    <QuadCamera/>
-                    <List size="small" style={{flex: 1, fontSize: 12, maxHeight:'15em', overflowY:'auto'}}>
                     {
-                            messages.map(i => <List.Item>{i.topic+' '+i.message}</List.Item>).reverse()
-                        }
-                    </List>
+                        selectedMenu==='quad'?
+                            <QuadCamera messages={messages}/>
+                        :selectedMenu==='single'?
+                            <SingleCamera/>
+                        :selectedMenu==='mqtt'?
+                            <MQTT connected={connected} messages={messages}/>
+                        :
+                            'Undefined'
+                    }
                 </Content>
             </Layout>
             
