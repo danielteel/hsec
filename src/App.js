@@ -1,31 +1,27 @@
-import { Layout, Menu, Button, theme, List, Typography } from 'antd';
-import {
-    LeftOutlined,
-    RightOutlined,
-    UploadOutlined,
-    AppstoreOutlined,
-    VideoCameraOutlined,
-} from '@ant-design/icons';
+import {Layout, Menu, theme} from 'antd';
+import {UploadOutlined, VideoCameraOutlined} from '@ant-design/icons';
 import mqtt from 'mqtt';
 import { useEffect, useState} from 'react';
 import QuadCamera from './components/QuadCamera';
-import SingleCamera from './components/SingleCamera';
 import MQTT from './components/MQTT';
+import Header from './components/Header';
 
-const { Header, Content, Sider } = Layout;
+const {  Content, Sider } = Layout;
 
-
+const menuItems = [
+    {key: 'camera', icon: <VideoCameraOutlined />},
+    {key: 'mqtt', icon: <UploadOutlined />},
+];
 
 function App() {
     const [client, setClient] = useState(null);
     const [connected, setConnected] = useState(false);
     const [messages, setMessages] = useState([]);
     const [collapsed, setCollapsed] = useState(false);
-    const [selectedMenu, setSelectedMenu] = useState('quad');
+    const [selectedMenu, setSelectedMenu] = useState('camera');
+    const [quality, setQuality] = useState('L');
 
-    const {
-        token: { colorBgContainer },
-    } = theme.useToken();
+    const {token: { colorBgContainer }} = theme.useToken();
 
     useEffect(() => {
         setClient(mqtt.connect('ws://192.168.1.14:8888'));
@@ -70,56 +66,19 @@ function App() {
         <Layout style={{ height: '100%' }}>
             <Sider trigger={null} collapsible collapsed={true} collapsedWidth={collapsed?0:undefined}>
                 <Menu
-                    onSelect={({key})=>{console.log(key);setSelectedMenu(key);}}
+                    onSelect={({key})=>setSelectedMenu(key)}
                     theme="dark"
                     mode="inline"
-                    defaultSelectedKeys={['quad']}
-                    items={[
-                        {
-                            key: 'quad',
-                            icon: <AppstoreOutlined />
-                        },
-                        {
-                            key: 'single',
-                            icon: <VideoCameraOutlined />
-                        },
-                        {
-                            key: 'mqtt',
-                            icon: <UploadOutlined />
-                        },
-                    ]}
+                    defaultSelectedKeys={[menuItems[0].key]}
+                    items={menuItems}
                 />
             </Sider>
             <Layout>
-                <Header style={{ padding: 0, background: colorBgContainer }}>
-                    <Button
-                        type="text"
-                        icon={collapsed ? <RightOutlined /> : <LeftOutlined />}
-                        onClick={() => setCollapsed(!collapsed)}
-                        style={{
-                            fontSize: '16px',
-                            width: 64,
-                            height: 64,
-                        }}
-                    />
-                    TeelTech
-                </Header>
-                <Content
-                    style={{
-                        display:'flex',
-                        flexDirection:'column',
-                        marginLeft: 8,
-                        marginRight: 8,
-                        marginTop: 12,
-                        marginBottom: 12,
-                        backgroundColor: colorBgContainer
-                    }}
-                >
+                <Header quality={quality} setQuality={setQuality} collapsed={collapsed} setCollapsed={setCollapsed}/>
+                <Content style={{display:'flex', flexDirection:'column', margin: '12px 8px', backgroundColor: colorBgContainer}}>
                     {
-                        selectedMenu==='quad'?
-                            <QuadCamera messages={messages}/>
-                        :selectedMenu==='single'?
-                            <SingleCamera/>
+                        selectedMenu==='camera'?
+                            <QuadCamera messages={messages} quality={quality}/>
                         :selectedMenu==='mqtt'?
                             <MQTT connected={connected} messages={messages}/>
                         :

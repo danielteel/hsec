@@ -5,14 +5,16 @@ import { Layout, Menu, Button, theme, List, Typography } from 'antd';
 
 
 
-export default function QuadCamera({messages}) {
+
+export default function QuadCamera({messages, quality}) {
     const { ref, height, width } = useComponentSize();
+
 
     return <>
         <div ref={ref} style={{flex:1, margin: 0, padding: 0, textAlign:'center'}}>
         </div>        
         <ReactPlayer 
-            url={'http://192.168.1.14:4000/allcamH.m3u8'}
+            url={'http://192.168.1.14:4000/allcam'+quality+'.m3u8'}
             style={{position:'absolute', left: ref.current?.offsetLeft, top: ref.current?.offsetTop}}
             muted={true}
             playing={true}
