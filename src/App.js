@@ -80,7 +80,7 @@ function App() {
                         selectedMenu==='camera'?
                             <QuadCamera messages={messages} quality={quality}/>
                         :selectedMenu==='mqtt'?
-                            <MQTT connected={connected} messages={messages}/>
+                            <MQTT connected={connected} messages={messages} client={client}/>
                         :
                             'Undefined'
                     }
