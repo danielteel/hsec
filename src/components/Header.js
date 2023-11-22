@@ -10,30 +10,30 @@ export default function Header({quality, setQuality, collapsed, setCollapsed}){
     } = theme.useToken();
 
     return (
-        <Layout.Header style={{ padding: 0, background: colorBgContainer, display: 'flex', alignItems: 'center', justifyContent:'space-between' }}>
-        <Button
-            type="text"
-            icon={collapsed ? <RightOutlined /> : <LeftOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-                fontSize: '12px',
-                width: 64,
-                height: 64,
-            }}
-        />
-        <Typography.Title level={3} style={{margin:0}}>DAN</Typography.Title>
-        <Space style={{marginRight:'10px'}}>
-            <Typography.Text strong style={{margin:0}}>Video</Typography.Text>
-            <Radio.Group
-                addonBefore="http://"
-                options={qualityOptions}
-                onChange={({ target: { value } }) => {setQuality(value)}}
-                value={quality}
-                optionType="button"
-                buttonStyle="solid"
-                size='small'
+        <Layout.Header style={{ padding: 0, background: colorBgContainer, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Button
+                type="text"
+                icon={collapsed ? <RightOutlined /> : <LeftOutlined />}
+                onClick={() => setCollapsed(!collapsed)}
+                style={{
+                    fontSize: '12px',
+                    width: 48,
+                    height: 48,
+                }}
             />
-        </Space>
+            <Typography.Title level={3} style={{ margin: 0 }}>DAN</Typography.Title>
+            <Space style={{ marginRight: '10px' }}>
+                <Typography.Text strong style={{ margin: 0 }}>Video</Typography.Text>
+                <Radio.Group
+                    addonBefore="http://"
+                    options={qualityOptions}
+                    onChange={({ target: { value } }) => { setQuality(value) }}
+                    value={quality}
+                    optionType="button"
+                    buttonStyle="solid"
+                    size='small'
+                />
+            </Space>
         </Layout.Header>
     );
 }

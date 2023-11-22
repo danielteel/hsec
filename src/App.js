@@ -34,7 +34,7 @@ function App() {
             </Sider>
             <Layout>
                 <Header quality={quality} setQuality={setQuality} collapsed={collapsed} setCollapsed={setCollapsed}/>
-                <Content style={{display:'flex', flexDirection:'column', margin: '12px 8px', backgroundColor: colorBgContainer}}>
+                <Content style={{display:'flex', flexDirection:'column', margin: '8px 6px', backgroundColor: colorBgContainer}}>
                     {
                         selectedMenu==='camera'?
                             <QuadCamera quality={quality}/>
