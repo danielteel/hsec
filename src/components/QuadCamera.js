@@ -6,7 +6,7 @@ import { Layout, Menu, Button, theme, List, Typography } from 'antd';
 
 
 
-export default function QuadCamera({messages, quality}) {
+export default function QuadCamera({quality}) {
     const { ref, height, width } = useComponentSize();
 
 
