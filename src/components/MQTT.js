@@ -2,33 +2,22 @@ import { useComponentSize } from "react-use-size";
 import ReactPlayer from 'react-player';
 import React, {useRef, useState} from 'react';
 import { Layout, Menu, Button, theme, List, Typography, Space } from 'antd';
-import useMQTT from "../hooks/useMQTT";
 
-export default function QuadCamera() {
-    const { ref, height, width } = useComponentSize();
-    const [alarm, setAlarm] = useState(false);
-    const [messages, setMessages] = useState([]);
 
-    const onMessage = (topic, message) => {
-        setMessages([...messages, {topic, message}]);
-    }
-
-    const {client, connected} = useMQTT('ws://192.168.1.14:8888', {onMessage});
+export default function MQTT({messages, connected, client, alarm, setAlarm}) {
 
     return (
         <Space direction="vertical">
             
             {connected?"Connected":'Offline'}
-            
+            {alarm?'Alarm On':'Alarm Off'}
             <Button disabled={!connected} onClick={()=>{
-                setAlarm((old) => {
-                    if (old){
-                        client.publish('alarm', 'off',);
-                    }else{
-                        client.publish('alarm', 'on');
-                    }
-                    return !old;
-                });
+                if (alarm){
+                    client?.publish('alarm', 'off', {qos: 1, retain: true});
+                }else{
+                    client?.publish('alarm', 'on', {qos: 1, retain: true});
+                }
+                setAlarm(!alarm);
             }}>Toggle Alarm</Button>
             <List size="small" style={{fontSize: 12, overflowY:'auto', borderStyle:'solid', borderWidth:'1px', borderColor:'#000'}}>
                 {

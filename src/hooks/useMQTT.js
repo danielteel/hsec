@@ -1,48 +1,40 @@
 import React, {useEffect, useState, useRef} from 'react';
 import mqtt from 'mqtt';
 
-let sharedClients = {};
 
 
 //figure out how to handle subscriptions
-export default function useMQTT(address, {onConnect, onError, onClose, onMessage}){
+export default function useMQTT({address, options, subscriptions, onConnect, onError, onClose, onMessage}){
     const [connected, setConnected] = useState(false);
     const [client, setClient] = useState(null);
 
     useEffect(() => {
-        if (!sharedClients[address]){
-            sharedClients[address]={address, refs: 1, client: mqtt.connect(address)};
-        }else{
-            sharedClients[address].refs++;
-            setConnected(sharedClients.client.connected);
-        }
-        setClient(sharedClients[address].client);
+        setClient(mqtt.connect(address, options));
         
         return () => {
-            sharedClients[address].refs--;
+            setClient(c => {
+                if (c) c.end()
+            });
             setClient(null);
             setConnected(false);
-            if (sharedClients[address].client && sharedClients[address].refs===0){
-                sharedClients[address].client.end();
-                delete sharedClients[address];
-            }
         }
-    }, [address]);
+    }, [address, options]);
 
     useEffect(() => {
         const connect = (connack) => {
             setConnected(true);
-            if (onConnect) onConnect(connack);
+            client.subscribe(subscriptions);
+            if (onConnect) onConnect(client, connack);
         };
         const error = (err) => {
-            if (onError) onError(err);
+            if (onError) onError(client, err);
         };
         const close = () => {
             setConnected(false);
-            if (onClose) onClose();
+            if (onClose) onClose(client);
         };
         const message = (topic, message) => {
-            if (onMessage) onMessage(topic, message);
+            if (onMessage) onMessage(client, topic, message);
         };
 
         if (client) {
@@ -60,7 +52,7 @@ export default function useMQTT(address, {onConnect, onError, onClose, onMessage
                 client.removeListener('message', message);
             }
         };
-    }, [client, onConnect, onClose, onError, onMessage]);
+    }, [client, subscriptions, onConnect, onClose, onError, onMessage]);
 
     return {client, connected};
 }
