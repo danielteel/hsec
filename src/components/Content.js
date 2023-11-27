@@ -23,7 +23,7 @@ export default function Content({selectedMenu, videoQuality}){
         }
     }
 
-    const {client, connected} = useMQTT({address: 'wss://192.168.1.14:4443', subscriptions: subscriptions, onMessage});
+    const {client, connected} = useMQTT({address: 'ws://192.168.1.14:8888', subscriptions: subscriptions, onMessage});
 
     return (
         <Layout.Content style={{ display: 'flex', flexDirection: 'column', margin: '8px 6px', backgroundColor: colorBgContainer }}>
