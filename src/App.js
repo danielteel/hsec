@@ -3,6 +3,7 @@ import {UploadOutlined, VideoCameraOutlined} from '@ant-design/icons';
 import { useState} from 'react';
 import Header from './components/Header';
 import Content from './components/Content';
+import Login from './components/Accounts';
 
 const menuItems = [
     {key: 'camera', icon: <VideoCameraOutlined />},
@@ -13,6 +14,13 @@ function App() {
     const [collapsed, setCollapsed] = useState(false);
     const [selectedMenu, setSelectedMenu] = useState('camera');
     const [quality, setQuality] = useState('L');
+    const [accessToken, setAccessToken] = useState(null);
+
+    if (!accessToken){
+        return (
+            <Login setAccessToken={setAccessToken}/>
+        );
+    }
 
     return (
         <Layout style={{ height: '100%' }}>
