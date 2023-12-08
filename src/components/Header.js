@@ -25,7 +25,6 @@ export default function Header({quality, setQuality, collapsed, setCollapsed}){
             <Space style={{ marginRight: '10px' }}>
                 <Typography.Text strong style={{ margin: 0 }}>Video</Typography.Text>
                 <Radio.Group
-                    addonBefore="http://"
                     options={qualityOptions}
                     onChange={({ target: { value } }) => { setQuality(value) }}
                     value={quality}
