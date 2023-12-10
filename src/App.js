@@ -17,7 +17,7 @@ function App() {
     const [user, setUser] = useState(null);
 
     useEffect(()=>{
-        fetch('http://localhost:4001/user/me', {credentials: 'include'}).then(response=>{
+        fetch('/user/me', {credentials: 'include'}).then(response=>{
             if (response.status!==200) throw Error('not logged in');
             return response.json();
         }).then(me => {

@@ -22,7 +22,7 @@ export default function CreateAccount({setUser}){
                                 <Input.Password placeholder="password" value={password} onChange={(e)=>setPassword(e.target.value)}/>
                             </Space>
                             <Button onClick={()=>{
-                                fetch('http://localhost:4001/user/create', {
+                                fetch('/api/user/create', {
                                     credentials: 'include',
                                     method: "POST", // *GET, POST, PUT, DELETE, etc.
                                     mode: "cors", // no-cors, *cors, same-origin
@@ -59,7 +59,7 @@ export default function CreateAccount({setUser}){
                                 <Input placeholder="verify code" value={verifyCode} onChange={(e)=>setVerifyCode(e.target.value)}/>
                             </Space>
                             <Button onClick={()=>{
-                                fetch('http://localhost:4001/user/verifyemail', {
+                                fetch('/api/user/verifyemail', {
                                     credentials: 'include',
                                     method: "POST", 
                                     mode: "cors",
@@ -75,7 +75,7 @@ export default function CreateAccount({setUser}){
                                     }
                                     return response.json();
                                 }).then(json => {
-                                    fetch('http://localhost:4001/user/me', {credentials: 'include'}).then(response=>{
+                                    fetch('/api/user/me', {credentials: 'include'}).then(response=>{
                                         if (response.status!==200) throw Error('not logged in');
                                         return response.json();
                                     }).then(me => {

@@ -25,7 +25,7 @@ export default function Header({quality, setQuality, collapsed, setCollapsed, se
             
             <Space style={{ marginRight: '10px' }}>
             <Button onClick={()=>{
-                fetch('http://localhost:4001/user/logout', {
+                fetch('/api/user/logout', {
                     credentials: 'include',
                     method: "POST", // *GET, POST, PUT, DELETE, etc.
                     mode: "cors", // no-cors, *cors, same-origin

@@ -15,7 +15,7 @@ export default function Login({setUser}){
                 <Input.Password placeholder="password" value={password} onChange={(e)=>setPassword(e.target.value)}/>
             </Space>
             <Button onClick={()=>{
-                fetch('http://localhost:4001/user/login', {
+                fetch('/api/user/login', {
                     credentials: 'include',
                     method: "POST", // *GET, POST, PUT, DELETE, etc.
                     mode: "cors", // no-cors, *cors, same-origin
@@ -30,7 +30,7 @@ export default function Login({setUser}){
                     }
                     return response.json();
                     }).then(json => {
-                        fetch('http://localhost:4001/user/me', {credentials: 'include'}).then(response=>{
+                        fetch('/api/user/me', {credentials: 'include'}).then(response=>{
                             if (response.status!==200) throw Error('not logged in');
                             return response.json();
                         }).then(me => {
