@@ -3,7 +3,7 @@ import {Layout, theme, Button, Input, Space, Typography} from 'antd';
 
 
 
-export default function Login({setAccessToken}){
+export default function Login({setUser}){
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
@@ -15,7 +15,8 @@ export default function Login({setAccessToken}){
                 <Input.Password placeholder="password" value={password} onChange={(e)=>setPassword(e.target.value)}/>
             </Space>
             <Button onClick={()=>{
-                fetch('https://danteel.dedyn.io/api/user/login', {
+                fetch('http://localhost:4001/user/login', {
+                    credentials: 'include',
                     method: "POST", // *GET, POST, PUT, DELETE, etc.
                     mode: "cors", // no-cors, *cors, same-origin
                     cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
@@ -29,12 +30,18 @@ export default function Login({setAccessToken}){
                     }
                     return response.json();
                     }).then(json => {
-                    setAccessToken(json.accessToken);
-                    console.log(json);
-                    setError(null);
+                        fetch('http://localhost:4001/user/me', {credentials: 'include'}).then(response=>{
+                            if (response.status!==200) throw Error('not logged in');
+                            return response.json();
+                        }).then(me => {
+                            setUser(me)
+                        }).catch(err => {
+                            console.error(err);
+                        })
+                        setError(null);
                     }).catch(err => {
-                    setError('error logging in');
-                    console.error(err);
+                        setError('error logging in');
+                        console.error(err);
                     });
             }}>Login</Button>
             {

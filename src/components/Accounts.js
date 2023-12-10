@@ -5,7 +5,7 @@ import CreateAccount from './CreateAccount';
 
 
 const whichList = ['login', 'create'];
-export default function Accounts({setAccessToken}){
+export default function Accounts({setUser}){
     const [which, setWhich] = useState(whichList[0]);
 
     const {token: { colorBgContainer }} = theme.useToken();
@@ -24,9 +24,9 @@ export default function Accounts({setAccessToken}){
               {
                 which === 'login'
                 ?
-                  <Login setAccessToken={setAccessToken}/>
+                  <Login setUser={setUser}/>
                 :
-                  <CreateAccount setAccessToken={setAccessToken}/>
+                  <CreateAccount setUser={setUser}/>
               }
             </Layout.Content>
         </Layout>

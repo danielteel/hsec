@@ -3,7 +3,7 @@ import {Layout, theme, Button, Input, Space, Typography} from 'antd';
 
 
 
-export default function CreateAccount({setAccessToken}){
+export default function CreateAccount({setUser}){
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [verifyCode, setVerifyCode] = useState('');
@@ -22,7 +22,8 @@ export default function CreateAccount({setAccessToken}){
                                 <Input.Password placeholder="password" value={password} onChange={(e)=>setPassword(e.target.value)}/>
                             </Space>
                             <Button onClick={()=>{
-                                fetch('https://danteel.dedyn.io/api/user/create', {
+                                fetch('http://localhost:4001/user/create', {
+                                    credentials: 'include',
                                     method: "POST", // *GET, POST, PUT, DELETE, etc.
                                     mode: "cors", // no-cors, *cors, same-origin
                                     cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
@@ -58,12 +59,13 @@ export default function CreateAccount({setAccessToken}){
                                 <Input placeholder="verify code" value={verifyCode} onChange={(e)=>setVerifyCode(e.target.value)}/>
                             </Space>
                             <Button onClick={()=>{
-                                fetch('https://danteel.dedyn.io/api/user/verifyemail', {
-                                    method: "POST", // *GET, POST, PUT, DELETE, etc.
-                                    mode: "cors", // no-cors, *cors, same-origin
-                                    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                                fetch('http://localhost:4001/user/verifyemail', {
+                                    credentials: 'include',
+                                    method: "POST", 
+                                    mode: "cors",
+                                    cache: "no-cache",
                                     headers: {
-                                    "Content-Type": "application/json",
+                                        "Content-Type": "application/json",
                                     },
                                     body: JSON.stringify({email, verifyCode})
                                 }).then(response => {
@@ -73,7 +75,15 @@ export default function CreateAccount({setAccessToken}){
                                     }
                                     return response.json();
                                 }).then(json => {
-                                    setAccessToken(json.accessToken);
+                                    fetch('http://localhost:4001/user/me', {credentials: 'include'}).then(response=>{
+                                        if (response.status!==200) throw Error('not logged in');
+                                        return response.json();
+                                    }).then(me => {
+                                        setUser(me)
+                                    }).catch(err => {
+                                        console.error(err);
+                                    })
+                                    setError(null);
                                 }).catch(err => {
                                     setError('error verifying email');
                                     console.error(err);

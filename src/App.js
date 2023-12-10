@@ -1,6 +1,6 @@
 import {Layout, Menu} from 'antd';
 import {UploadOutlined, VideoCameraOutlined} from '@ant-design/icons';
-import { useState} from 'react';
+import {useState, useEffect} from 'react';
 import Header from './components/Header';
 import Content from './components/Content';
 import Login from './components/Accounts';
@@ -14,11 +14,22 @@ function App() {
     const [collapsed, setCollapsed] = useState(false);
     const [selectedMenu, setSelectedMenu] = useState('camera');
     const [quality, setQuality] = useState('L');
-    const [accessToken, setAccessToken] = useState(null);
+    const [user, setUser] = useState(null);
 
-    if (!accessToken){
+    useEffect(()=>{
+        fetch('http://localhost:4001/user/me', {credentials: 'include'}).then(response=>{
+            if (response.status!==200) throw Error('not logged in');
+            return response.json();
+        }).then(me => {
+            setUser(me)
+        }).catch(err => {
+            console.error(err);
+        })
+    }, []);
+
+    if (!user){
         return (
-            <Login setAccessToken={setAccessToken}/>
+            <Login setUser={setUser}/>
         );
     }
 
@@ -34,7 +45,7 @@ function App() {
                 />
             </Layout.Sider>
             <Layout>
-                <Header quality={quality} setQuality={setQuality} collapsed={collapsed} setCollapsed={setCollapsed}/>
+                <Header quality={quality} setQuality={setQuality} collapsed={collapsed} setCollapsed={setCollapsed} setUser={setUser}/>
                 <Content videoQuality={quality} selectedMenu={selectedMenu}/>
             </Layout>
             
