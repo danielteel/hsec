@@ -24,7 +24,7 @@ export default function Header({quality, setQuality, collapsed, setCollapsed, se
             <Typography.Title level={3} style={{ margin: 0 }}>DAN</Typography.Title>
             
             <Space style={{ marginRight: '10px' }}>
-            <Button onClick={()=>{
+            <Button type='text' onClick={()=>{
                 fetch('/api/user/logout', {
                     credentials: 'include',
                     method: "POST", // *GET, POST, PUT, DELETE, etc.
