@@ -43,7 +43,7 @@ export default function Header({quality, setQuality, collapsed, setCollapsed, se
                 });
 
             }}>Logout</Button>
-                <Typography.Text strong style={{ margin: 0 }}>Video</Typography.Text>
+                {/* <Typography.Text strong style={{ margin: 0 }}>Video</Typography.Text>
                 <Radio.Group
                     options={qualityOptions}
                     onChange={({ target: { value } }) => { setQuality(value) }}
@@ -51,7 +51,7 @@ export default function Header({quality, setQuality, collapsed, setCollapsed, se
                     optionType="button"
                     buttonStyle="solid"
                     size='small'
-                />
+                /> */}
             </Space>
         </Layout.Header>
     );
