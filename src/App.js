@@ -1,5 +1,6 @@
 import {Layout, Menu} from 'antd';
 import {UploadOutlined, VideoCameraOutlined} from '@ant-design/icons';
+import { LiaUsersCogSolid } from "react-icons/lia";
 import {useState, useEffect} from 'react';
 import Header from './components/Header';
 import Content from './components/Content';
@@ -8,6 +9,7 @@ import Login from './components/Accounts';
 const menuItems = [
     {key: 'camera', icon: <VideoCameraOutlined />},
     {key: 'mqtt', icon: <UploadOutlined />},
+    {key: 'accounts', icon: <LiaUsersCogSolid/>}
 ];
 
 function App() {
