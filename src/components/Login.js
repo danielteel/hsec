@@ -28,8 +28,7 @@ export default function Login({setUser}){
                     if (response.status!==200){
                         throw Error('logging in status code different than 200');
                     }
-                    return response.json();
-                    }).then(json => {
+                    }).then(() => {
                         fetch('/api/user/me', {credentials: 'include'}).then(response=>{
                             if (response.status!==200) throw Error('not logged in');
                             return response.json();
