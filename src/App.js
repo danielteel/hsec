@@ -1,59 +1,31 @@
-import {Layout, Menu} from 'antd';
-import {UploadOutlined, VideoCameraOutlined} from '@ant-design/icons';
-import { LiaUsersCogSolid } from "react-icons/lia";
+import {Spin} from 'antd';
 import {useState, useEffect} from 'react';
-import Header from './components/Header';
-import Content from './components/Content';
+
+import { userMe } from './api/user';
+
 import Login from './components/Accounts';
+import Main from './components/Main';
 
-const menuItems = [
-    {key: 'camera', icon: <VideoCameraOutlined />},
-    {key: 'mqtt', icon: <UploadOutlined />},
-    {key: 'accounts', icon: <LiaUsersCogSolid/>}
-];
 
-function App() {
-    const [collapsed, setCollapsed] = useState(false);
-    const [selectedMenu, setSelectedMenu] = useState('camera');
-    const [quality, setQuality] = useState('L');
+export default function App() {
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(()=>{
-        fetch('/api/user/me', {credentials: 'include'}).then(response=>{
-            if (response.status!==200) throw Error('not logged in');
-            return response.json();
-        }).then(me => {
-            setUser(me)
-        }).catch(err => {
-            console.error(err);
-        })
+        async function checkLogin(){
+            setUser(await userMe());
+            setLoading(false);
+        }
+        checkLogin();
     }, []);
 
-    if (!user){
-        return (
-            <Login setUser={setUser}/>
-        );
+    if (loading){
+        return <div style={{height: '100%', width: '100%', display:'flex', alignContent:'center', alignItems:'center', justifyContent:'center', justifyItems:'center'}}><Spin tip="Loading" size="large"><div style={{padding: 50, borderRadius: 4}}></div></Spin></div>
+    }else{
+        if (!user){
+            return <Login setUser={setUser}/>
+        }else{
+            return <Main user={user} setUser={setUser}/>
+        }
     }
-
-    return (
-        <Layout style={{ height: '100%' }}>
-            <Layout.Sider trigger={null} collapsible collapsed={true} collapsedWidth={collapsed?0:undefined}>
-                <Menu
-                    onSelect={({key})=>setSelectedMenu(key)}
-                    theme="dark"
-                    mode="inline"
-                    defaultSelectedKeys={[menuItems[0].key]}
-                    items={menuItems}
-                />
-            </Layout.Sider>
-            <Layout>
-                <Header quality={quality} setQuality={setQuality} collapsed={collapsed} setCollapsed={setCollapsed} setUser={setUser}/>
-                <Content videoQuality={quality} selectedMenu={selectedMenu}/>
-            </Layout>
-            
-        </Layout>
-    );
 }
-
-export default App;
-

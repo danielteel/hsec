@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import {Layout, theme, Button, Input, Space, Typography} from 'antd';
+import {Layout, theme, Button, Input, Space, Typography, Spin} from 'antd';
+import { userLogin, userMe } from '../api/user';
 
 
 
@@ -7,6 +8,7 @@ export default function Login({setUser}){
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
+    const [loggingIn, setLoggingIn] = useState(false);
 
     return (<>
             <Typography.Title level={4}>Login</Typography.Title>
@@ -14,35 +16,24 @@ export default function Login({setUser}){
                 <Input placeholder="email" value={email} onChange={(e)=>setEmail(e.target.value)}/>
                 <Input.Password placeholder="password" value={password} onChange={(e)=>setPassword(e.target.value)}/>
             </Space>
-            <Button onClick={()=>{
-                fetch('/api/user/login', {
-                    credentials: 'include',
-                    method: "POST", // *GET, POST, PUT, DELETE, etc.
-                    mode: "cors", // no-cors, *cors, same-origin
-                    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({email, password})
-                    }).then(response => {
-                        if (response.status!==200){
-                            throw Error('logging in status code different than 200');
-                        }
-                    }).then(() => {
-                        fetch('/api/user/me', {credentials: 'include'}).then(response=>{
-                            if (response.status!==200) throw Error('not logged in');
-                            return response.json();
-                        }).then(me => {
-                            setUser(me)
-                        }).catch(err => {
-                            console.error(err);
-                        })
-                        setError(null);
-                    }).catch(err => {
-                        setError('error logging in');
-                        console.error(err);
-                    });
-            }}>Login</Button>
+            <Button disabled={loggingIn} onClick={async ()=>{
+                setLoggingIn(true);
+                setError(null);
+                const failedMessage = await userLogin(email, password);
+                if (failedMessage){
+                    setError(failedMessage);
+                }else{
+                    const me = await userMe();
+                    setUser(me);
+                }
+                setLoggingIn(false);
+            }}>{
+                loggingIn
+                ?
+                    <Spin/>
+                :
+                    'Login'
+            }</Button>
             {
                 error
                 ?

@@ -2,9 +2,7 @@ import {Layout, Button, Space, Typography, Radio, theme} from 'antd';
 import {LeftOutlined, RightOutlined} from '@ant-design/icons';
 import Cookies from 'js-cookie';
 
-const qualityOptions = [{label: 'Lo',value: 'L'}, {label: 'Hi', value: 'H'}];
-
-export default function Header({quality, setQuality, collapsed, setCollapsed, setUser}){
+export default function Header({collapsed, setCollapsed, setUser}){
     const {
         token: { colorBgContainer },
     } = theme.useToken();
@@ -43,15 +41,6 @@ export default function Header({quality, setQuality, collapsed, setCollapsed, se
                 });
 
             }}>Logout</Button>
-                {/* <Typography.Text strong style={{ margin: 0 }}>Video</Typography.Text>
-                <Radio.Group
-                    options={qualityOptions}
-                    onChange={({ target: { value } }) => { setQuality(value) }}
-                    value={quality}
-                    optionType="button"
-                    buttonStyle="solid"
-                    size='small'
-                /> */}
             </Space>
         </Layout.Header>
     );
