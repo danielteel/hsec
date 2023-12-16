@@ -7,7 +7,7 @@ import { Button, Divider, List, Typography, Row, Col, Form } from 'antd';
 export default function Profile({user}) {
 
     return <div style={{width: '100%', height:'100%', display:'flex', flexDirection:'column', alignItems:'center'}}>
-        <Typography.Title>Profile</Typography.Title>
+        <Typography.Title level={3}>Profile</Typography.Title>
         <Form labelCol={{span:6}} wrapperCol={{span:18}}>
             <Form.Item label="Email">
                 <Typography.Text>{user.email}</Typography.Text>

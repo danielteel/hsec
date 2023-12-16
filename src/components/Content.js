@@ -3,6 +3,7 @@ import {Layout, theme} from 'antd';
 
 import Profile from './profile/Profile';
 import QuadCamera from './QuadCamera';
+import VerifyAccounts from './verifyaccounts/VerifyAccounts';
 
 
 export default function Content({selectedMenu, user}){
@@ -16,6 +17,8 @@ export default function Content({selectedMenu, user}){
                     <QuadCamera/>
                 : selectedMenu === 'profile' ?
                     <Profile user={user}/>
+                : selectedMenu === 'accounts' ?
+                    <VerifyAccounts/>
                 :
                     'yolso'
             }
