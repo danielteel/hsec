@@ -7,13 +7,10 @@ export async function manageUsers(roleFilter){
     }
     try {
         const response = await fetch('/api/manage/users'+roleFilter, {credentials: 'include'});
-        if (response.status===200){
-            const users = await response.json();
-            return users;
-        }
+        return [response.status>=200 && response.status<=299, await response.json()];
     }catch(e){
     }
-    return null;
+    return [false, 'failed'];
 }
 
 //Returns null if failed, returns new user object if passed
@@ -26,11 +23,9 @@ export async function manageUserRole(user_id, new_role){
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({new_role, user_id})
         };
-        const response = await fetch('/api/manage/user/role',options);
-        if (response.status===200){
-            return await response.json();
-        }
+        const response = await fetch('/api/manage/user/role', options);
+        return [response.status>=200 && response.status<=299, await response.json()];
     }catch (e){
     }
-    return null;
+    return [false, 'failed'];
 }
