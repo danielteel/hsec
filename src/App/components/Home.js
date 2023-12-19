@@ -97,7 +97,7 @@ export default function Home(){
             :
                 null
         }
-        <video hidden={!videoLoaded} controls={true} playsInline={true} muted={true} autoPlay ref={videoRef} style={{width:'100%'}}></video>
+        <video hidden={!videoLoaded} playsInline={true} muted={true} autoPlay ref={videoRef} style={{width:'100%'}}></video>
         {
             !started?
                 <Button onClick={()=>{
