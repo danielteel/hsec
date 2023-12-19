@@ -1,10 +1,10 @@
 export async function userMe(){
     try {
         const response = await fetch('/api/user/me', {credentials: 'include'});
-        return [response.status>=200 && response.status<=299, await response.json()];
+        return [response.status>=200 && response.status<=299, await response.json(), response.status];
     }catch(e){
     }
-    return [false, 'failed'];
+    return [false, 'failed', 400];
 }
 
 export async function userLogin(email, password){
@@ -17,9 +17,9 @@ export async function userLogin(email, password){
             body: JSON.stringify({email, password})
         };
         const response = await fetch('/api/user/login',options);
-        return [response.status>=200 && response.status<=299, await response.json()];
+        return [response.status>=200 && response.status<=299, await response.json(), response.status];
     }catch (e){
-        return [false, 'failed'];
+        return [false, 'failed', 400];
     }
 }
 
@@ -31,8 +31,8 @@ export async function userLogout(){
             cache: "no-cache"
         };
         const response = await fetch('/api/user/logout',options);
-        return [response.status>=200 && response.status<=299, await response.json()];
+        return [response.status>=200 && response.status<=299, await response.json(), response.status];
     }catch (e){
-        return [false, 'failed'];
+        return [false, 'failed', 400];
     }
 }

@@ -23,6 +23,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
 
 import AppRouter from './AppRouter';
+import { Link, useLocation } from 'wouter';
 import LogoutButton from './components/LogoutButton';
 
 function Copyright(props) {
@@ -79,17 +80,22 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
-const MenuItem = ({ text, icon }) => {
+const MenuItemLink = ({ text, icon, href }) => {
     return (
-        <ListItemButton>
-            <ListItemIcon>{icon}</ListItemIcon>
-            <ListItemText primary={text} />
-        </ListItemButton>
+        <Link href={href}>
+            <ListItemButton>
+                <ListItemIcon>{icon}</ListItemIcon>
+                <ListItemText primary={text} />
+            </ListItemButton>
+        </Link>
     );
 }
 
 export default function Dashboard() {
     const [open, setOpen] = React.useState(false);
+
+    const [location, setLocation] = useLocation();
+
     const toggleDrawer = () => {
         setOpen(!open);
     };
@@ -113,12 +119,12 @@ export default function Dashboard() {
                 </Toolbar>
                 <Divider />
                 <List component="nav">
-                    <MenuItem text="Home" icon={<CameraIndoorIcon/>} />
+                    <MenuItemLink text="Home" href='/' icon={<CameraIndoorIcon/>}/>
                     <Divider sx={{my: 1}} />
-                    <MenuItem text="Users" icon={<PeopleIcon/>} />
-                    <MenuItem text="Settings" icon={<DisplaySettingsIcon/>}/>
+                    <MenuItemLink text="Users" href='/users' icon={<PeopleIcon/>}/>
+                    <MenuItemLink text="Settings" href='/settings' icon={<DisplaySettingsIcon/>}/>
                     <Divider sx={{my: 1}} />
-                    <MenuItem text="Profile" icon={<AccountCircleIcon/>} />
+                    <MenuItemLink text="Profile" href='/profile' icon={<AccountCircleIcon/>} />
                 </List>
             </Drawer>
             <Box component="main" sx={{backgroundColor: (theme) => theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900], flexGrow: 1, height: '100vh', overflow: 'auto'}}>

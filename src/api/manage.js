@@ -7,10 +7,10 @@ export async function manageUsers(roleFilter){
     }
     try {
         const response = await fetch('/api/manage/users'+roleFilter, {credentials: 'include'});
-        return [response.status>=200 && response.status<=299, await response.json()];
+        return [response.status>=200 && response.status<=299, await response.json(), response.status];
     }catch(e){
     }
-    return [false, 'failed'];
+    return [false, 'failed', 400];
 }
 
 //Returns null if failed, returns new user object if passed
@@ -24,8 +24,8 @@ export async function manageUserRole(user_id, new_role){
             body: JSON.stringify({new_role, user_id})
         };
         const response = await fetch('/api/manage/user/role', options);
-        return [response.status>=200 && response.status<=299, await response.json()];
+        return [response.status>=200 && response.status<=299, await response.json(), response.status];
     }catch (e){
     }
-    return [false, 'failed'];
+    return [false, 'failed', 400];
 }
