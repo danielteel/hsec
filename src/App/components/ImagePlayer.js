@@ -38,7 +38,6 @@ export default function ImagePlayer({streamFile, videoRef}){
 
         async function loadNext(){
             const beforeTime = (new Date()).getTime();
-            console.log(beforeTime-lastTime);
             lastTime=beforeTime;
             const success = await updateImage();
             const afterTime = (new Date()).getTime();
@@ -54,6 +53,7 @@ export default function ImagePlayer({streamFile, videoRef}){
             }
             timeoutId=setTimeout(loadNext, period);
         }
+
         loadNext();
 
         return ()=>{
