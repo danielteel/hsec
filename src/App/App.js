@@ -98,8 +98,8 @@ export default function Dashboard() {
 
     return (
         <Box sx={{ display: 'flex'}}>
-            <AppBar position="absolute" open={open}>
-                <Toolbar sx={{ pr: '24px' }}>
+            <AppBar  position="absolute" open={open}>
+                <Toolbar variant='dense' sx={{ pr: '24px' }}>
                     <IconButton children={<MenuIcon/>} edge="start" color="inherit" aria-label="open drawer" onClick={toggleDrawer} sx={{mr: '36px', ...(open && {display: 'none'})}}/>
                     <Typography component="h1" variant="h6" color="inherit" noWrap sx={{flexGrow: 1}}>
                         DAN
@@ -108,7 +108,7 @@ export default function Dashboard() {
                 </Toolbar>
             </AppBar>
             <Drawer variant="permanent" open={open}>
-                <Toolbar sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end', px: 1}}>
+                <Toolbar variant='dense' sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end', px: 1}}>
                     <IconButton onClick={toggleDrawer}>
                         <ChevronLeftIcon />
                     </IconButton>
@@ -124,7 +124,7 @@ export default function Dashboard() {
                 </List>
             </Drawer>
             <Box component="main" sx={{backgroundColor: (theme) => theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900], flexGrow: 1, height:'100vh', display: 'flex', flexDirection:'column', overflow: 'auto'}}>
-                <Toolbar />{/*use this to align content correctly*/}
+                <Toolbar variant='dense' />{/*use this to align content correctly*/}
                 <Container maxWidth="lg" sx={{my: 3, flexGrow: 1, display: 'flex', flexDirection:'column'}}>
                         {/* Recent Orders */}
                             <AppRouter/>
