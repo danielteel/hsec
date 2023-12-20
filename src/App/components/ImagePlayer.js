@@ -54,7 +54,6 @@ export default function ImagePlayer({streamFile, videoRef}){
             }
             timeoutId=setTimeout(loadNext, period);
         }
-
         loadNext();
 
         return ()=>{
