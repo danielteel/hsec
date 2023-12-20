@@ -9,8 +9,6 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
@@ -23,7 +21,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
 
 import AppRouter from './AppRouter';
-import { Link, useLocation } from 'wouter';
+import { Link } from 'wouter';
 import LogoutButton from './components/LogoutButton';
 
 function Copyright(props) {
@@ -94,14 +92,12 @@ const MenuItemLink = ({ text, icon, href }) => {
 export default function Dashboard() {
     const [open, setOpen] = React.useState(false);
 
-    const [location, setLocation] = useLocation();
-
     const toggleDrawer = () => {
         setOpen(!open);
     };
 
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex'}}>
             <AppBar position="absolute" open={open}>
                 <Toolbar sx={{ pr: '24px' }}>
                     <IconButton children={<MenuIcon/>} edge="start" color="inherit" aria-label="open drawer" onClick={toggleDrawer} sx={{mr: '36px', ...(open && {display: 'none'})}}/>
@@ -112,7 +108,7 @@ export default function Dashboard() {
                 </Toolbar>
             </AppBar>
             <Drawer variant="permanent" open={open}>
-                <Toolbar sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end', px: [1]}}>
+                <Toolbar sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end', px: 1}}>
                     <IconButton onClick={toggleDrawer}>
                         <ChevronLeftIcon />
                     </IconButton>
@@ -127,19 +123,13 @@ export default function Dashboard() {
                     <MenuItemLink text="Profile" href='/profile' icon={<AccountCircleIcon/>} />
                 </List>
             </Drawer>
-            <Box component="main" sx={{backgroundColor: (theme) => theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900], flexGrow: 1, height: '100vh', overflow: 'auto'}}>
+            <Box component="main" sx={{backgroundColor: (theme) => theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900], flexGrow: 1, height:'100vh', display: 'flex', flexDirection:'column', overflow: 'auto'}}>
                 <Toolbar />{/*use this to align content correctly*/}
-                <Container maxWidth="lg" sx={{my: 4}}>
-                    <Grid container spacing={3}>
+                <Container maxWidth="lg" sx={{my: 3, flexGrow: 1, display: 'flex', flexDirection:'column'}}>
                         {/* Recent Orders */}
-                        <Grid item xs={12}>
-                            <Paper sx={{p: 2, display: 'flex', flexDirection: 'column'}}>
-                                <AppRouter/>
-                            </Paper>
-                        </Grid>
-                    </Grid>
-                    <Copyright sx={{ pt: 4 }} />
+                            <AppRouter/>
                 </Container>
+                    <Copyright sx={{ py: 1 }} />
             </Box>
         </Box>
     );

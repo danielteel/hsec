@@ -2,6 +2,8 @@ import { useContext } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -21,12 +23,12 @@ function Copyright(props) {
 
 
 export default function Login() {
-    const {user, setUser} = useContext(UserContext);
+    const {setUser} = useContext(UserContext);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        const [passed, fetchedUser] = await userLogin(data.get('email'), data.get('password'));
+        const [passed, fetchedUser] = await userLogin(data.get('email'), data.get('password'), String(data.get('remember')).toLowerCase().trim()!=='on'?false:true);
         if (passed){
             setUser(fetchedUser);
         }else{
@@ -70,6 +72,10 @@ export default function Login() {
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                    />            
+                    <FormControlLabel
+                        control={<Checkbox name="remember" color="primary" />}
+                        label="Remember me"
                     />
                     <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>Sign In</Button>
                     <Grid container>

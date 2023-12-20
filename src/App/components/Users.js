@@ -25,6 +25,7 @@ export default function User() {
     }, [manageUsers]);
 
     return <>
+        <Paper sx={{p: 1, display: 'flex', flexDirection: 'column'}}>
         <Title>Users</Title>
         <Table size="small">
             <TableHead>
@@ -46,5 +47,6 @@ export default function User() {
                 ))}
             </TableBody>
         </Table>
+        </Paper>
     </>;
 }

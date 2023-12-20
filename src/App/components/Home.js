@@ -1,72 +1,83 @@
-import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
+import VideoSelect from './VideoSelect';
 import Hls from 'hls.js';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useComponentSize } from "react-use-size";
 
 
+async function attemptLoadVideo(hlsRef, videoRef, fileName){
+    try {
+        const videoSrc = '/api/cam/'+fileName;
+        if (Hls.isSupported()) {
+            if (!hlsRef.current) hlsRef.current=new Hls();
+            hlsRef.current.loadSource(videoSrc);
+            hlsRef.current.attachMedia(videoRef.current);
+        }else{
+            videoRef.current.src = videoSrc;
+        }
+        await videoRef.current.play();
+        videoRef.current.fastSeek(Number.POSITIVE_INFINITY);
+    } catch (e){
+    }
+}
 
 export default function Home(){
     const videoRef = useRef();
-    const hlsRef = useRef(new Hls());
-    const [started, setStarted] = useState(false);
-    const [videoLoaded, setVideoLoaded] = useState(false);
+    const hlsRef = useRef(null);
+    const [streamFile, setStreamFile] = useState(null);
     const [error, setError] = useState(null);
+    const {ref, width, height} = useComponentSize();
 
-    async function attemptLoadVideo(){
-        try {
-            const videoSrc = '/api/cam/allcamL.m3u8';
-            if (Hls.isSupported()) {
-                hlsRef.current.loadSource(videoSrc);
-                hlsRef.current.attachMedia(videoRef.current);
-            }else{
-                videoRef.current.src = '/api/cam/allcamL.m3u8';
+
+    useEffect(()=>{
+        if (!streamFile) return;
+
+        attemptLoadVideo(hlsRef, videoRef, streamFile.file);
+
+        return ()=>{
+            if (hlsRef.current){
+                hlsRef.current.destroy();
+                hlsRef.current=null;
             }
-            await videoRef.current.play();
-            videoRef.current.fastSeek(Number.POSITIVE_INFINITY);
-        } catch (e){
         }
-    }
+    }, [streamFile]);
 
     useEffect( () => {
+        if (!streamFile) return;
+
         const video = videoRef.current;
-        
-        async function loadStart(event){
-            if (videoLoaded===false) setVideoLoaded(true);
-        }
+       
 
         let timeoutId = null;
         let lastDuration = video.duration;
         let lastTime = video.currentTime;
-        const checkPeriod = 2000;
+        const checkPeriod = 6000;
         
         async function checkForError(){
-            
-            if (started){
-                if (Hls.isSupported()){
-                    if (Math.abs(video.duration - video.currentTime) > 4){
-                        video.currentTime = video.duration-2;
-                        try {
-                            await video.play();
-                        }catch (e){
+            if (Hls.isSupported()){
+                if (Math.abs(video.duration - video.currentTime) > 4){
+                    video.currentTime = video.duration-2;
+                    try {
+                        await video.play();
+                    }catch (e){
 
-                        }
                     }
-                    if (Math.abs(lastDuration-video.duration)<0.1 || !isFinite(video.duration)){
-                        setError('Possible network error, trying to reconnect...');
-                        attemptLoadVideo();
-                    }else{
-                        setError(null);
-                    }
-                    lastDuration=video.duration;
-                }else{
-                    if (Math.abs(lastTime-video.currentTime)<0.1 || !isFinite(video.currentTime)){
-                        setError('Possible network error, trying to reconnect...');
-                        attemptLoadVideo();
-                    }else{
-                        setError(null);
-                    }
-                    lastTime=video.currentTime;
                 }
+                if (Math.abs(lastDuration-video.duration)<0.1 || !isFinite(video.duration)){
+                    setError('Possible network error, trying to reconnect...');
+                    attemptLoadVideo(hlsRef, videoRef, streamFile.file);
+                }else{
+                    setError(null);
+                }
+                lastDuration=video.duration;
+            }else{
+                if (Math.abs(lastTime-video.currentTime)<0.1 || !isFinite(video.currentTime)){
+                    setError('Possible network error, trying to reconnect...');
+                    attemptLoadVideo(hlsRef, videoRef, streamFile.file);
+                }else{
+                    setError(null);
+                }
+                lastTime=video.currentTime;
             }
             timeoutId=setTimeout(checkForError, checkPeriod);
         }
@@ -74,39 +85,30 @@ export default function Home(){
 
         let fastForwardTimeoutId = null;
         function fastForward(){
-            video.fastSeek(Number.POSITIVE_INFINITY);
+            if (video.fastSeek){
+                video.fastSeek(Number.POSITIVE_INFINITY);
+            }
             fastForwardTimeoutId=setTimeout(fastForward, 30000);
         }
         fastForwardTimeoutId=setTimeout(fastForward, 30000);
 
-        video.addEventListener('loadstart', loadStart);
-        
-
         return ()=>{
-            video.removeEventListener('loadstart', loadStart);
             clearTimeout(timeoutId);
             clearTimeout(fastForwardTimeoutId);
             timeoutId=null;
         }
-    }, [started, videoLoaded]);
+    }, [streamFile]);
 
-    return <>
-        {
-            error?
+    return (<>
+        <VideoSelect streamFile={streamFile} setStreamFile={setStreamFile}/>
+        <div ref={ref} style={{flexGrow: 1}}>
+            {
+                error?
                 <Alert severity="error">{error}</Alert>
-            :
+                :
                 null
-        }
-        <video hidden={!videoLoaded} playsInline={true} muted={true} autoPlay ref={videoRef} style={{width:'100%'}}></video>
-        {
-            !started?
-                <Button onClick={()=>{
-                    setStarted(true);
-                    attemptLoadVideo();
-                }}>Load Live View</Button>
-            :
-                null
-        }
-
-    </>
+            }
+            <video ref={videoRef} playsInline={true} muted={true} autoPlay style={{position:'absolute', width, height}}></video>
+        </div>
+    </>);
 }
