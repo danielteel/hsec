@@ -2,6 +2,8 @@ import { useEffect, useState, useContext } from 'react';
 import ApiContext from '../../contexts/ApiContext';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
+import Hls from 'hls.js';
+
 
 export default function VideoSelect({streamFile, setStreamFile, videoRef}){
     const {camGetDetails} = useContext(ApiContext);
@@ -47,7 +49,7 @@ export default function VideoSelect({streamFile, setStreamFile, videoRef}){
             }
             </ButtonGroup>
             {
-                videoRef.current?.requestFullscreen || videoRef.current?.webkitRequestFullscreen || videoRef.current?.msRequestFullscreen
+                Hls.isSupported()
                 ?
                 <>
                     <Button style={{marginLeft:'auto'}} variant='text' color='info' onClick={()=>{

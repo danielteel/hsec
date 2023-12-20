@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+
 import Hls from 'hls.js';
 import { useEffect, useRef, useState } from 'react';
 
@@ -21,11 +21,6 @@ async function attemptLoadVideo(hlsRef, videoRef, fileName){
 export default function VideoPlayer({streamFile, videoRef}){
     const hlsRef = useRef(null);
     const [error, setError] = useState(null);
-    const [showControls, setShowControls] = useState(true);
-    
-    useEffect(()=>{
-        setShowControls(false);//this hack prevents video from clipping on iphones
-    }, []);
 
     useEffect(()=>{
         if (!streamFile || !videoRef) return;
@@ -55,7 +50,7 @@ export default function VideoPlayer({streamFile, videoRef}){
             if (Math.abs(lastTime-video.currentTime)<0.1 || !isFinite(video.currentTime)){
                 setError('Possible network error, trying to reconnect...');
                 errorCount++;
-                if (errorCount>2){
+                if (errorCount>3){
                     attemptLoadVideo(hlsRef, videoRef, streamFile.file);
                 }
             }else{
@@ -67,13 +62,14 @@ export default function VideoPlayer({streamFile, videoRef}){
         }
         timeoutId=setTimeout(checkForError, 2000);
 
-        function fastForward(){
-            if (video.fastSeek){
-                video.fastSeek(Number.POSITIVE_INFINITY);
+        async function fastForward(){
+            if (!isFinite(video.duration)){
             }else{
-                video.currentTime=video.duration-0.5;
+                if (video.currentTime<video.duration-1){
+                    video.currentTime=video.duration-1;
+                }
             }
-            fastForwardTimeoutId=setTimeout(fastForward, 60000);
+            fastForwardTimeoutId=setTimeout(fastForward, 5000);
         }
         fastForwardTimeoutId=setTimeout(fastForward, 5000);
 
@@ -87,6 +83,7 @@ export default function VideoPlayer({streamFile, videoRef}){
 
     useEffect(()=>{
         if (!videoRef) return;
+
         async function dontPause(){
             try {
                 await videoRef.current.play();
@@ -99,10 +96,10 @@ export default function VideoPlayer({streamFile, videoRef}){
         return ()=>{
             video.removeEventListener('pause', dontPause);
         }
-    }, [videoRef])
-
+    }, [videoRef]);
 
     return (<>
-        <video controls={showControls} ref={videoRef} playsInline={true} muted={true} type='application/x-mpegURL' autoPlay style={{flexGrow:1}}></video>
+        <video ref={videoRef} playsInline={true} muted={true} type='application/x-mpegURL' autoPlay style={{flexGrow:1}}></video>
+        {error}
     </>);
 }
