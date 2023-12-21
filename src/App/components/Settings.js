@@ -67,10 +67,7 @@ export default function Settings() {
                     </TableHead>
                     <TableBody>
                         {formats?.map((row) => (
-                            <TableRow
-                                key={row.id}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
+                            <TableRow key={row.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }} >
                                 <TableCell>{row.type}</TableCell>
                                 <TableCell>{row.file}</TableCell>
                                 <TableCell>{row.title}</TableCell>
