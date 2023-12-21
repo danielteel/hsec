@@ -1,7 +1,7 @@
 
 export async function camGetDetails(){
     try {
-        const response = await fetch('/api/cam/details.json', {credentials: 'include'});
+        const response = await fetch('/api/cam/details', {credentials: 'include'});
         return [response.status>=200 && response.status<=299, await response.json(), response.status];
     }catch(e){
     }
