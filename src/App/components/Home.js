@@ -15,7 +15,7 @@ export default function Home(){
             <Paper sx={{p: 1, display: 'flex', flexDirection: 'column'}}>
                 <VideoSelect streamFile={streamFile} setStreamFile={setStreamFile} videoRef={videoRef}/>
                 {
-                    streamFile?.block?
+                    streamFile?.type==='hls'?
                         <VideoPlayer streamFile={streamFile} videoRef={videoRef}/>
                     :
                         <ImagePlayer streamFile={streamFile} videoRef={videoRef}/>
