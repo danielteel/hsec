@@ -30,7 +30,7 @@ export default function Main() {
     if (startingUp) {
         return (
             <Box sx={{ display: 'flex', width:'100vw', height:'100vh', alignItems:'center', justifyContent:'center' }}>
-                <CircularProgress size={100}/>
+                <CircularProgress size={80}/>
             </Box>
         );
     } else {
