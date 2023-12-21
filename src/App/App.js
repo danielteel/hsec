@@ -126,7 +126,6 @@ export default function Dashboard() {
             <Box component="main" sx={{backgroundColor: (theme) => theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900], flexGrow: 1, height:'100vh', display: 'flex', flexDirection:'column', overflow: 'auto'}}>
                 <Toolbar variant='dense' />{/*use this to align content correctly*/}
                 <Container maxWidth="lg" sx={{my: 3, flexGrow: 1, display: 'flex', flexDirection:'column'}}>
-                        {/* Recent Orders */}
                             <AppRouter/>
                 </Container>
                     <Copyright sx={{ py: 1 }} />
