@@ -51,7 +51,7 @@ export default function Settings() {
     return (
         <Grid item xs={12} md={4} lg={3}>
             <Paper sx={{ p: 1, display: 'flex', flexDirection: 'column' }}>
-                <Table dense>
+                <Table dense={true}>
                     <TableHead>
                         <TableRow>
                             <TableCell>Type</TableCell>
