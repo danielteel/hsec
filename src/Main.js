@@ -3,13 +3,12 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import App from './App/App';
-import Login from './Login/Login';
+import Authenticate from './Login/Authenticate';
 
 import UserContext from './contexts/UserContext';
 import ApiContext, {buildApiContext} from './contexts/ApiContext';
 
 import { userMe } from './api/user';
-import Authenticate from './Login/Authenticate';
 
 
 export default function Main() {

@@ -4,7 +4,6 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -14,14 +13,7 @@ import UserContext from '../contexts/UserContext';
 import { userLogin } from '../api/user';
 
 import { Link as WouterLink } from 'wouter';
-
-function Copyright(props) {
-    return (
-        <Typography variant="body2" color="text.secondary" align="center" {...props}>
-            {'Copyright © Dan Teel ' + new Date().getFullYear()}
-        </Typography>
-    );
-}
+import Copyright from '../common/Copyright';
 
 
 export default function Login() {
@@ -63,6 +55,7 @@ export default function Login() {
                         label="Email Address"
                         name="email"
                         autoComplete="email"
+                        type="email"
                         autoFocus
                     />
                     <TextField

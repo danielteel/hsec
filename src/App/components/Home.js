@@ -1,7 +1,7 @@
 import VideoSelect from './VideoSelect';
 import { useRef, useState } from 'react';
 import VideoPlayer from './VideoPlayer';
-import { Paper, Grid } from '@mui/material';
+import { Paper } from '@mui/material';
 import ImagePlayer from './ImagePlayer';
 
 

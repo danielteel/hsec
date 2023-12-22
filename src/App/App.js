@@ -11,7 +11,6 @@ import IconButton from '@mui/material/IconButton';
 import Container from '@mui/material/Container';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -27,15 +26,8 @@ import Slide from '@mui/material/Slide';
 import AppRouter from './AppRouter';
 import { Link } from 'wouter';
 import LogoutButton from './components/LogoutButton';
-import { Grid } from '@mui/material';
 
-function Copyright(props) {
-    return (
-        <Typography variant="body2" color="text.secondary" align="center" {...props}>
-            {'Copyright © Dan Teel ' + new Date().getFullYear()}
-        </Typography>
-    );
-}
+import Copyright from '../common/Copyright';
 
 const drawerWidth = 240;
 
