@@ -9,6 +9,7 @@ import UserContext from './contexts/UserContext';
 import ApiContext, {buildApiContext} from './contexts/ApiContext';
 
 import { userMe } from './api/user';
+import Authenticate from './Login/Authenticate';
 
 
 export default function Main() {
@@ -41,7 +42,7 @@ export default function Main() {
                     user ?
                         <App />
                     :
-                        <Login />
+                        <Authenticate />
                 }
             </UserContext.Provider>
             </ApiContext.Provider>

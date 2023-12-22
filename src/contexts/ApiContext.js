@@ -1,14 +1,22 @@
 import {createContext} from 'react';
-import { userLogin, userMe, userLogout } from '../api/user';
-import { manageUsers, manageUserRole } from '../api/manage';
+import { userLogin, userMe, userLogout, userPasswordChange, userCreate, userVerifyEmail, userChangeEmail, userGetChangeEmail } from '../api/user';
+import { manageUsers, manageUserRole, manageUserEmail } from '../api/manage';
 import {camGetDetails, camAdd, camDelete, camUpdate} from '../api/cam';
 
 const ApiContext = createContext({
     userMe: async ()=>{},
     userLogin: async ()=>{},
-    userLogout: async ()=>{},
+    userLogout: async ()=>{},        
+    userCreate:  async ()=>{},  
+    userVerifyEmail: async ()=>{},  
+    userChangeEmail:  async ()=>{},  
+    userGetChangeEmail: async ()=>{},  
+    userPasswordChange: async ()=>{},  
+
     manageUsers: async ()=>{},
     manageUserRole: async ()=>{},
+    manageUserEmail: async()=>{},
+
     camGetDetails: async ()=>{},
     camAdd: async ()=>{},
     camDelete: async ()=>{},
@@ -34,8 +42,17 @@ export function buildApiContext(setUser){
         userMe: async () => checkForLogout(...await userMe(), setUser),
         userLogin: async (email, password) => checkForLogout(...await userLogin(email, password), setUser),
         userLogout: async () => checkForLogout(...await userLogout(), setUser),
+        userCreate: async (email) => await userCreate(email),
+        userVerifyEmail: async (email, password, verifyCode) => await userVerifyEmail(email, password, verifyCode),
+        userChangeEmail: async (newEmail, verifyCode) => checkForLogout(...await userChangeEmail(newEmail, verifyCode), setUser),
+        userGetChangeEmail: async () => checkForLogout(...await userGetChangeEmail(), setUser),
+        userPasswordChange: async (email, newPassword, confirmCode) => await userPasswordChange(email, newPassword, confirmCode),
+
         manageUsers: async (roleFilter) => checkForLogout(...await manageUsers(roleFilter), setUser),
         manageUserRole: async (userId, newRole) => checkForLogout(...await manageUserRole(userId, newRole), setUser),
+        manageUserEmail: async (user_id, new_email) => checkForLogout(...await manageUserEmail(user_id, new_email), setUser),
+
+
         camGetDetails: async () =>  checkForLogout(...await camGetDetails(), setUser),
         camAdd: async (obj) =>  checkForLogout(...await camAdd(obj), setUser),
         camDelete: async (which) =>  checkForLogout(...await camDelete(which), setUser),

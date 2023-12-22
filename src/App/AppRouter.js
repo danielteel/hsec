@@ -1,4 +1,4 @@
-import { Router, Route, Link, Switch } from "wouter";
+import { Router, Route, Switch } from "wouter";
 
 import Users from './components/Users';
 import Home from './components/Home';

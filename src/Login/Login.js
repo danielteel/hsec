@@ -13,6 +13,8 @@ import Container from '@mui/material/Container';
 import UserContext from '../contexts/UserContext';
 import { userLogin } from '../api/user';
 
+import { Link as WouterLink } from 'wouter';
+
 function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -80,10 +82,10 @@ export default function Login() {
                     <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>Sign In</Button>
                     <Grid container>
                         <Grid item xs>
-                            <Link href="#" variant="body2">Forgot password?</Link>
+                            <WouterLink href="/forgotpassword" variant="body2">Forgot password?</WouterLink>
                         </Grid>
                         <Grid item>
-                            <Link href="#" variant="body2">Don't have an account? Sign Up</Link>
+                            <WouterLink href="/signup" variant="body2">Don't have an account? Sign Up</WouterLink>
                         </Grid>
                     </Grid>
                 </Box>
