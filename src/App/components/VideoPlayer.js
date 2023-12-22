@@ -56,7 +56,7 @@ export default function VideoPlayer({streamFile, videoRef}){
                     setError({type:'warning', text: 'Not enough bandwidth or network error occured'});
                 }
             }else{
-                if (isFinite(video.duration) && (video.currentTime < (video.duration-streamFile.block-0.5))){
+                if (isFinite(video.duration) && (video.currentTime < (video.duration-streamFile.block-2))){
                     video.currentTime = video.duration-streamFile.block;
                     if (errorCount===0){
                         setError({type:'warning', text: 'playback falling behind, attempting to fast forward'});
