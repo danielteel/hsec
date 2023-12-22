@@ -40,3 +40,20 @@ export async function camDelete(which){
     }
     return [false, 'failed', 400];
 }
+
+
+export async function camUpdate(obj){
+    try{
+        const options = {
+            credentials: 'include',
+            method: "POST",
+            cache: "no-cache",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(obj)
+        };
+        const response = await fetch('/api/cam/update', options);
+        return [response.status>=200 && response.status<=299, await response.json(), response.status];
+    }catch (e){
+    }
+    return [false, 'failed', 400];
+}

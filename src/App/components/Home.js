@@ -11,7 +11,6 @@ export default function Home(){
     const videoRef = useRef();
 
     return (
-        <Grid item xs={12} md={4} lg={3}>
             <Paper sx={{p: 1, display: 'flex', flexDirection: 'column'}}>
                 <VideoSelect streamFile={streamFile} setStreamFile={setStreamFile} videoRef={videoRef}/>
                 {
@@ -21,6 +20,5 @@ export default function Home(){
                         <ImagePlayer streamFile={streamFile} videoRef={videoRef}/>
                 }
             </Paper>
-        </Grid>
     );
 } 

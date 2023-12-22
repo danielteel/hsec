@@ -9,7 +9,6 @@ export default function ImagePlayer({streamFile, videoRef}){
         let timeoutId = null;
         const video=videoRef.current;
         let lastBlob=null;
-        let lastTime=(new Date()).getTime();
         let cancelling = false;
 
         async function updateImage(){
@@ -38,7 +37,6 @@ export default function ImagePlayer({streamFile, videoRef}){
 
         async function loadNext(){
             const beforeTime = (new Date()).getTime();
-            lastTime=beforeTime;
             const success = await updateImage();
             const afterTime = (new Date()).getTime();
             const loadOffset = afterTime-beforeTime;
@@ -70,7 +68,7 @@ export default function ImagePlayer({streamFile, videoRef}){
     return <>
         {
             error?
-                <Alert severity={error.type}>{error.text}</Alert>
+                <Alert variant='filled' severity={error.type}>{error.text}</Alert>
             :
                 null
         }

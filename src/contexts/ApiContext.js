@@ -1,7 +1,7 @@
 import {createContext} from 'react';
 import { userLogin, userMe, userLogout } from '../api/user';
 import { manageUsers, manageUserRole } from '../api/manage';
-import {camGetDetails, camAdd, camDelete} from '../api/cam';
+import {camGetDetails, camAdd, camDelete, camUpdate} from '../api/cam';
 
 const ApiContext = createContext({
     userMe: async ()=>{},
@@ -11,7 +11,8 @@ const ApiContext = createContext({
     manageUserRole: async ()=>{},
     camGetDetails: async ()=>{},
     camAdd: async ()=>{},
-    camDelete: async ()=>{}
+    camDelete: async ()=>{},
+    camUpdate: async ()=>{}
 });
 export default ApiContext;
 
@@ -37,7 +38,8 @@ export function buildApiContext(setUser){
         manageUserRole: async (userId, newRole) => checkForLogout(...await manageUserRole(userId, newRole), setUser),
         camGetDetails: async () =>  checkForLogout(...await camGetDetails(), setUser),
         camAdd: async (obj) =>  checkForLogout(...await camAdd(obj), setUser),
-        camDelete: async (which) =>  checkForLogout(...await camDelete(which), setUser)
+        camDelete: async (which) =>  checkForLogout(...await camDelete(which), setUser),
+        camUpdate: async (obj) =>  checkForLogout(...await camUpdate(obj), setUser),
     };
     cachedSetUser=setUser;
     cachedApiContext=api;
