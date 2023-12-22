@@ -7,7 +7,7 @@ export default function Authenticate(){
             <Switch>
                 <Route path='/signup'>Signup</Route>
                 <Route path='/verifysignup'>Verify Signup</Route>
-                <Route path='/forgotpassword'>Forgot</Route>
+                <Route path='/forgotpassword'>Forgot Password</Route>
                 <Route path='/verifyforgot'>Verify Forgot</Route>
                 <Route><Login/></Route>
             </Switch>
