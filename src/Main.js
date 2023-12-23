@@ -15,6 +15,7 @@ export default function Main() {
     const [user, setUser] = useState(null);
     const [startingUp, setStartingUp] = useState(true);
 
+    console.log(user);
 
     useEffect(() => {
         async function loadUser() {

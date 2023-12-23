@@ -24,3 +24,23 @@ export function isLegalPassword(password){
     if (password.trim().length<8) failFor+='must be at least 8 characters. ';
     return failFor.trim();
 }
+
+export function meetsMinRole(userRole, minRole){
+    userRole=String(userRole).trim().toLowerCase();
+    minRole=String(minRole).trim().toLowerCase();
+    const roles = ['unverified', 'member', 'manager', 'admin', 'super'];
+    const userLevel = roles.indexOf(userRole);
+    const minLevel = roles.indexOf(minRole);
+    if (userLevel===-1){
+        console.error('meetsMinRole: invalid minRole of', minRole);
+        return false;
+    }
+    if (minLevel===-1){
+        console.error('meetsMinRole: invalid minRole of', minRole);
+        return false;
+    }
+
+    if (userLevel>=minLevel) return true;
+
+    return false;
+}

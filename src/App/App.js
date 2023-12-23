@@ -11,7 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import Container from '@mui/material/Container';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-
+import HomeIcon from '@mui/icons-material/Home';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -19,7 +19,7 @@ import CameraIndoorIcon from '@mui/icons-material/CameraIndoor';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PeopleIcon from '@mui/icons-material/People';
 import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
-
+import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import Slide from '@mui/material/Slide';
 
@@ -28,6 +28,8 @@ import { Link } from 'wouter';
 import LogoutButton from './components/LogoutButton';
 
 import Copyright from '../common/Copyright';
+import { meetsMinRole } from '../common/common';
+import UserContext from '../contexts/UserContext';
 
 const drawerWidth = 240;
 
@@ -99,10 +101,20 @@ const MenuItemLink = ({ text, icon, href }) => {
     );
 }
 
-export default function Dashboard() {
+const navigationItems = [
+    {text: 'home',      href: '/',         minRole:'unverified',    icon: <HomeIcon/>},
+    {text: 'video',     href: '/video',    minRole:'member',        icon: <OndemandVideoIcon/>},
+    {text: 'users',     href: '/users',    minRole:'manager',       icon: <PeopleIcon/>},
+    {text: 'settings',  href: '/settings', minRole:'admin',         icon: <DisplaySettingsIcon/>},
+    {text: 'profile',   href: '/profile',  minRole:'unverified',    icon: <AccountCircleIcon/>},
+];
+
+export default function App() {
     const contentRef = React.useRef();
     const [content, setContent] = React.useState(undefined);
     const [open, setOpen] = React.useState(false);
+
+    const {user} = React.useContext(UserContext);
 
     React.useEffect(()=>{
         setContent(contentRef.current);
@@ -129,12 +141,14 @@ export default function Dashboard() {
                 <Toolbar/>
                 <Divider />
                 <List component="nav">
-                    <MenuItemLink href='/' icon={<CameraIndoorIcon/>}/>
-                    <Divider sx={{my: 1}} />
-                    <MenuItemLink href='/users' icon={<PeopleIcon/>}/>
-                    <MenuItemLink href='/settings' icon={<DisplaySettingsIcon/>}/>
-                    <Divider sx={{my: 1}} />
-                    <MenuItemLink href='/profile' icon={<AccountCircleIcon/>} />
+                    {
+                        navigationItems.map((item) => {
+                            if (meetsMinRole(user.role, item.minRole)){
+                                return <MenuItemLink href={item.href} icon={item.icon}/>;
+                            }
+                            return null;
+                        })
+                    }
                 </List>
             </Drawer>
             <Box ref={contentRef} component="main" sx={{backgroundColor: (theme) => theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900], flexGrow: 1, height:'100vh', display: 'flex', flexDirection:'column', overflow: 'auto'}}>

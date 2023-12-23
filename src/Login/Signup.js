@@ -14,16 +14,19 @@ import { Alert } from '@mui/material';
 import Copyright from '../common/Copyright';
 
 import { isValidEmail } from '../common/common';
+import { LoadingButton } from '@mui/lab';
 
 
 export default function Signup() {
     const api = useContext(ApiContext);
     const [, setLocation] = useLocation();
     const [error, setError] = useState(null);
+    const [inProgress, setInProgress] = useState(false);
     const params = useParams();
 
     const handleSubmit = async (event) => {
         setError(null);
+        setInProgress(true);
         event.preventDefault();
         try {
             const data = new FormData(event.currentTarget);
@@ -41,6 +44,7 @@ export default function Signup() {
         }catch (e){
             setError('error occured');
         }
+        setInProgress(false);
     };
 
     return (
@@ -61,6 +65,7 @@ export default function Signup() {
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, width: '100%' }}>
                     <TextField
+                        disabled={inProgress}
                         margin="normal"
                         required
                         fullWidth
@@ -78,7 +83,7 @@ export default function Signup() {
                         :
                             null
                     }
-                    <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>Send Email</Button>
+                    <LoadingButton loading={inProgress} type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>Send Email</LoadingButton>
                     <Grid container>   
                         <Grid item xs>
                             <WouterLink href="/verifysignup" variant="body2">I already have a confirmation code</WouterLink>

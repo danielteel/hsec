@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -9,25 +9,36 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import { Alert, LoadingButton } from '@mui/lab';
 import UserContext from '../contexts/UserContext';
 import { userLogin } from '../api/user';
 
 import { Link as WouterLink } from 'wouter';
 import Copyright from '../common/Copyright';
+import { Hidden } from '@mui/material';
 
 
 export default function Login() {
     const {setUser} = useContext(UserContext);
+    const [error, setError] = useState(null);
+    const [inProgress, setInProgress] = useState(false);
 
     const handleSubmit = async (event) => {
+        setInProgress(true);
+        setError(null);
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        const [passed, fetchedUser] = await userLogin(data.get('email'), data.get('password'), String(data.get('remember')).toLowerCase().trim()!=='on'?false:true);
-        if (passed){
-            setUser(fetchedUser);
-        }else{
-            setUser(null);
+        try{
+            const data = new FormData(event.currentTarget);
+            const [passed, fetchedUser] = await userLogin(data.get('email'), data.get('password'), String(data.get('remember')).toLowerCase().trim()!=='on'?false:true);
+            if (passed){
+                setUser(fetchedUser);
+            }else{
+                setError('failed to login, double check email and password');
+            }
+        }catch{
+            setError('failed to login, double check email and password');
         }
+        setInProgress(false);
     };
 
     return (
@@ -48,6 +59,7 @@ export default function Login() {
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                     <TextField
+                        disabled={inProgress}
                         margin="normal"
                         required
                         fullWidth
@@ -59,6 +71,7 @@ export default function Login() {
                         autoFocus
                     />
                     <TextField
+                        disabled={inProgress}
                         margin="normal"
                         required
                         fullWidth
@@ -69,10 +82,12 @@ export default function Login() {
                         autoComplete="current-password"
                     />            
                     <FormControlLabel
-                        control={<Checkbox name="remember" color="primary" />}
+                        control={<Checkbox disabled={inProgress} name="remember" color="primary" />}
                         label="Remember me"
                     />
-                    <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>Sign In</Button>
+                    <Alert severity='error' style={{width:'100%', ...(error?{}:{display:'none'})}}>{error}</Alert>
+                    <LoadingButton loading={inProgress} type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>Sign In</LoadingButton>
+
                     <Grid container>
                         <Grid item xs>
                             <WouterLink href="/forgotpassword" variant="body2">Forgot password?</WouterLink>

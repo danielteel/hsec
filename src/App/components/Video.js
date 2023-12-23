@@ -6,7 +6,7 @@ import ImagePlayer from './ImagePlayer';
 
 
 
-export default function Home(){
+export default function Video(){
     const [streamFile, setStreamFile] = useState(null);
     const videoRef = useRef();
 

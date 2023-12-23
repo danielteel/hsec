@@ -16,6 +16,7 @@ import { Alert } from '@mui/material';
 import Copyright from '../common/Copyright';
 
 import { isValidEmail, isLegalPassword } from '../common/common';
+import { LoadingButton } from '@mui/lab';
 
 
 export default function VerifySignup() {
@@ -23,9 +24,11 @@ export default function VerifySignup() {
     const api = useContext(ApiContext);
     const params = useParams();
     const [error, setError] = useState(null);
+    const [inProgress, setInProgress] = useState(false);
 
     const handleSubmit = async (event) => {
         setError(null);
+        setInProgress(true);
         event.preventDefault();
         try {
             const data = new FormData(event.currentTarget);
@@ -35,23 +38,23 @@ export default function VerifySignup() {
 
             if (!isValidEmail(email)){
                 setError('Invalid email address');
-                return;
-            }
-            const passFailFor = isLegalPassword(password);
-            if (passFailFor){
-                setError('Bad password: '+passFailFor);
-                return;
-            }
-
-            const [passed, json] = await api.userVerifyEmail(email, password, confirmationCode);
-            if (passed) {
-                    setUser(json);
             }else{
-                setError('Error: '+json.error);
+                const passFailFor = isLegalPassword(password);
+                if (passFailFor){
+                    setError('Bad password: '+passFailFor);
+                }else{
+                    const [passed, json] = await api.userVerifyEmail(email, password, confirmationCode);
+                    if (passed) {
+                        setUser(json);
+                    }else{
+                        setError('Error: '+json.error);
+                    }
+                }
             }
         }catch(e){
             setError('error occured');
         }
+        setInProgress(false);
     };
 
     return (
@@ -72,6 +75,7 @@ export default function VerifySignup() {
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, width: '100%' }}>
                     <TextField
+                        disabled={inProgress}
                         margin="normal"
                         required
                         fullWidth
@@ -84,6 +88,7 @@ export default function VerifySignup() {
                         defaultValue={params?.email || ''}
                     />                    
                     <TextField
+                        disabled={inProgress}
                         margin="normal"
                         required
                         fullWidth
@@ -95,6 +100,7 @@ export default function VerifySignup() {
                         defaultValue={params?.confirmCode || ''}
                     />
                     <TextField
+                        disabled={inProgress}
                         margin="normal"
                         required
                         fullWidth
@@ -112,7 +118,7 @@ export default function VerifySignup() {
                         :
                             null
                     }
-                    <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>Sign Up</Button>
+                    <LoadingButton loading={inProgress} type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>Sign Up</LoadingButton>
                     <Grid container>
                         <Grid item xs>
                             <WouterLink href={"/signup/"+(params?.email || '')} variant="body2">Didnt get a code?</WouterLink>

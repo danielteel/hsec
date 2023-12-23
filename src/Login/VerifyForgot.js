@@ -16,6 +16,7 @@ import { Alert } from '@mui/material';
 import Copyright from '../common/Copyright';
 
 import { isValidEmail, isLegalPassword } from '../common/common';
+import { LoadingButton } from '@mui/lab';
 
 
 export default function VerifyForgot() {
@@ -24,9 +25,11 @@ export default function VerifyForgot() {
     const [, setLocation] = useLocation();
     const params = useParams();
     const [error, setError] = useState(null);
+    const [inProgress, setInProgress] = useState(false);
 
     const handleSubmit = async (event) => {
         setError(null);
+        setInProgress(true);
         event.preventDefault();
         try {
             const data = new FormData(event.currentTarget);
@@ -36,28 +39,28 @@ export default function VerifyForgot() {
 
             if (!isValidEmail(email)){
                 setError('Invalid email address');
-                return;
-            }
-            const passFailFor = isLegalPassword(newPassword);
-            if (passFailFor){
-                setError('Bad password: '+passFailFor);
-                return;
-            }
-
-            const [passed, message] = await api.userPasswordChange(email, newPassword, confirmationCode);
-            if (passed) {
-                const [loggedIn, fetchedUser] = await api.userLogin(email, newPassword);
-                if (loggedIn){            
-                    setUser(fetchedUser);
-                }else{
-                    setLocation('/login');
-                }
             }else{
-                setError(message.error || 'Error occured');
+                const passFailFor = isLegalPassword(newPassword);
+                if (passFailFor){
+                    setError('Bad password: '+passFailFor);
+                }else{
+                    const [passed, message] = await api.userPasswordChange(email, newPassword, confirmationCode);
+                    if (passed) {
+                        const [loggedIn, fetchedUser] = await api.userLogin(email, newPassword);
+                        if (loggedIn){            
+                            setUser(fetchedUser);
+                        }else{
+                            setLocation('/login');
+                        }
+                    }else{
+                        setError(message.error || 'Error occured');
+                    }
+                }
             }
         }catch(e){
             setError('error occured');
         }
+        setInProgress(false);
     };
 
     return (
@@ -78,6 +81,7 @@ export default function VerifyForgot() {
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, width: '100%' }}>
                     <TextField
+                        disabled={inProgress}
                         margin="normal"
                         required
                         fullWidth
@@ -90,6 +94,7 @@ export default function VerifyForgot() {
                         defaultValue={params?.email || ''}
                     />                    
                     <TextField
+                        disabled={inProgress}
                         margin="normal"
                         required
                         fullWidth
@@ -101,6 +106,7 @@ export default function VerifyForgot() {
                         defaultValue={params?.confirmCode || ''}
                     />
                     <TextField
+                        disabled={inProgress}
                         margin="normal"
                         required
                         fullWidth
@@ -118,7 +124,7 @@ export default function VerifyForgot() {
                         :
                             null
                     }
-                    <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>Set New Password</Button>
+                    <LoadingButton loading={inProgress} type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>Set New Password</LoadingButton>
                     <Grid container>
                         <Grid item xs>
                             <WouterLink href={"/forgotpassword/"+(params?.email || '')} variant="body2">Didnt get a code?</WouterLink>

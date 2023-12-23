@@ -2,7 +2,17 @@
 export async function camGetDetails(){
     try {
         const response = await fetch('/api/cam/details', {credentials: 'include'});
-        return [response.status>=200 && response.status<=299, await response.json(), response.status];
+        const formats = await response.json();
+        formats.sort((a, b) => {
+            if (a.file.toLowerCase()>b.file.toLowerCase()){
+                return 1;
+            }
+            if  (a.file.toLowerCase()<b.file.toLowerCase()){
+                return -1;
+            }
+            return 0;
+        })
+        return [response.status>=200 && response.status<=299, formats, response.status];
     }catch(e){
     }
     return [false, 'failed', 400];
@@ -18,7 +28,17 @@ export async function camAdd(obj){
             body: JSON.stringify(obj)
         };
         const response = await fetch('/api/cam/add', options);
-        return [response.status>=200 && response.status<=299, await response.json(), response.status];
+        const formats = await response.json();
+        formats.sort((a, b) => {
+            if (a.file.toLowerCase()>b.file.toLowerCase()){
+                return 1;
+            }
+            if  (a.file.toLowerCase()<b.file.toLowerCase()){
+                return -1;
+            }
+            return 0;
+        })
+        return [response.status>=200 && response.status<=299, formats, response.status];
     }catch (e){
     }
     return [false, 'failed', 400];
@@ -35,7 +55,17 @@ export async function camDelete(which){
             body: JSON.stringify({which})
         };
         const response = await fetch('/api/cam/delete', options);
-        return [response.status>=200 && response.status<=299, await response.json(), response.status];
+        const formats = await response.json();
+        formats.sort((a, b) => {
+            if (a.file.toLowerCase()>b.file.toLowerCase()){
+                return 1;
+            }
+            if  (a.file.toLowerCase()<b.file.toLowerCase()){
+                return -1;
+            }
+            return 0;
+        })
+        return [response.status>=200 && response.status<=299, formats, response.status];
     }catch (e){
     }
     return [false, 'failed', 400];
@@ -52,7 +82,17 @@ export async function camUpdate(obj){
             body: JSON.stringify(obj)
         };
         const response = await fetch('/api/cam/update', options);
-        return [response.status>=200 && response.status<=299, await response.json(), response.status];
+        const formats = await response.json();
+        formats.sort((a, b) => {
+            if (a.file.toLowerCase()>b.file.toLowerCase()){
+                return 1;
+            }
+            if  (a.file.toLowerCase()<b.file.toLowerCase()){
+                return -1;
+            }
+            return 0;
+        })
+        return [response.status>=200 && response.status<=299, formats, response.status];
     }catch (e){
     }
     return [false, 'failed', 400];

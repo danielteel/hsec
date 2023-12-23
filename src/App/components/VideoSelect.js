@@ -12,6 +12,7 @@ export default function VideoSelect({streamFile, setStreamFile, videoRef}){
     useEffect(()=>{
         if (hlsDetails) return;
 
+        let cancel=false;
         let fetchTimeoutId = null;
         async function fetchFormats(){
             fetchTimeoutId=null;
@@ -25,12 +26,14 @@ export default function VideoSelect({streamFile, setStreamFile, videoRef}){
                     return;
                 }
             }
+            if (cancel) return;
             fetchTimeoutId=setTimeout(fetchFormats, 4000);
         }
         
         fetchFormats();
 
         return ()=>{
+            cancel=true;
             if (fetchTimeoutId){
                 clearTimeout(fetchTimeoutId);
                 fetchTimeoutId=null;
