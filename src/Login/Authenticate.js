@@ -12,7 +12,7 @@ export default function Authenticate(){
     return (
         <Router>
             <Switch>
-                <Route path='/signup'><Signup/></Route>
+                <Route path='/signup/:email?'><Signup/></Route>
                 <Route path='/verifysignup/:email?/:confirmCode?'><VerifySignup/></Route>
                 <Route path='/forgotpassword/:email?'><ForgotPassword/></Route>
                 <Route path='/verifyforgot/:email?/:confirmCode?'><VerifyForgot/></Route>
