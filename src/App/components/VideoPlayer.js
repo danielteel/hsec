@@ -18,25 +18,42 @@ async function attemptLoadVideo(hlsRef, videoRef, fileName){
     }
 }
 
-export default function VideoPlayer({streamFile, videoRef}){
+function Video({videoRef, ...props}){
+    useEffect(()=>{
+        if (!videoRef) return;
+        let cancelled=false;
+        setTimeout(()=>{
+            if (!cancelled){
+                videoRef.current.controls=false;
+            }
+        }, 250);
+        return ()=>{
+            cancelled=true;
+        }
+    }, [videoRef])
+    return <video controls={true} ref={videoRef} {...props}></video>
+}
+
+export default function VideoPlayer({format, fullscreen}){
     const hlsRef = useRef(null);
     const [error, setError] = useState(null);
+    const videoRef = useRef();
 
     useEffect(()=>{
-        if (!streamFile || !videoRef) return;
+        if (!videoRef || !videoRef.current || !format || format.type!=='hls') return;
 
-        attemptLoadVideo(hlsRef, videoRef, streamFile.file);
+        attemptLoadVideo(hlsRef, videoRef, format.file);
 
         return ()=>{
             if (hlsRef.current){
-                hlsRef.current.destroy();
+                if (hlsRef.current.destroy) hlsRef.current.destroy();
                 hlsRef.current=null;
             }
         }
-    }, [streamFile, videoRef]);
+    }, [format]);
 
     useEffect( () => {
-        if (!streamFile || !videoRef) return;
+        if (!videoRef || !videoRef.current || !format || format.type!=='hls') return;
 
         const video = videoRef.current;
        
@@ -51,13 +68,13 @@ export default function VideoPlayer({streamFile, videoRef}){
                 if (errorCount>3){
                     setError({type:'error', text: 'Not enough bandwidth or network error occured, reloading...'});
                     errorCount=0;
-                    attemptLoadVideo(hlsRef, videoRef, streamFile.file);
+                    attemptLoadVideo(hlsRef, videoRef, format.file);
                 }else{
                     setError({type:'warning', text: 'Not enough bandwidth or network error occured'});
                 }
             }else{
-                if (isFinite(video.duration) && (video.currentTime < (video.duration-streamFile.block-2))){
-                    video.currentTime = video.duration-streamFile.block;
+                if (isFinite(video.duration) && (video.currentTime < (video.duration-format.block-2))){
+                    video.currentTime = video.duration-format.block;
                     if (errorCount===0){
                         setError({type:'warning', text: 'playback falling behind, attempting to fast forward'});
                     }
@@ -77,11 +94,11 @@ export default function VideoPlayer({streamFile, videoRef}){
             clearTimeout(timeoutId);
             timeoutId=null;
         }
-    }, [streamFile, videoRef]);
+    }, [format]);
 
 
     useEffect(()=>{
-        if (!videoRef) return;
+        if (!videoRef || !videoRef.current || !format || format.type!=='hls') return;
 
         async function dontPause(){
             try {
@@ -95,15 +112,13 @@ export default function VideoPlayer({streamFile, videoRef}){
         return ()=>{
             video.removeEventListener('pause', dontPause);
         }
-    }, [videoRef]);
+    }, [format]);
 
-    return <div style={{flexGrow:1, position:'relative'}}>
-        {
-            error?
-                <Alert variant='filled' severity={error.type} style={{position:'absolute', width:'100%'}}>{error.text}</Alert>
-            :
-                null
-        }
-        <video ref={videoRef} playsInline={true} muted={true} type='application/x-mpegURL' autoPlay={true} style={{width:'100%'}}></video>
-    </div>;
+
+    if (!format || format.type!=='hls') return null;
+
+    return <>
+        <Alert variant='standard' severity={error?.type} style={{width:'100%', ...(fullscreen?{position:'fixed', bottom:"0px", left:'0px', width:'100dvw'}:{}), ...(error?{}:{display:'none'})}}>{error?.text}</Alert>
+        <Video videoRef={videoRef} playsInline={true} muted={true} type='application/x-mpegURL' autoPlay={true} style={{objectFit:'contain', maxWidth:'100dvw', maxHeight:'100dvh'}}></Video>
+    </>;
 }

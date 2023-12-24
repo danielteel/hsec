@@ -15,8 +15,6 @@ export default function Main() {
     const [user, setUser] = useState(null);
     const [startingUp, setStartingUp] = useState(true);
 
-    console.log(user);
-
     useEffect(() => {
         async function loadUser() {
             const [passed, me] = await userMe();
@@ -30,7 +28,7 @@ export default function Main() {
 
     if (startingUp) {
         return (
-            <Box sx={{ display: 'flex', width:'100vw', height:'100vh', alignItems:'center', justifyContent:'center' }}>
+            <Box sx={{ display: 'flex', width:'100dvw', height:'100dvh', alignItems:'center', justifyContent:'center' }}>
                 <CircularProgress size={80}/>
             </Box>
         );

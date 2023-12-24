@@ -44,3 +44,13 @@ export function meetsMinRole(userRole, minRole){
 
     return false;
 }
+
+export function laxStringsEqual(a, b){
+    if (typeof a!=='string' || typeof b!=='string'){
+        return false;
+    }
+    if (a.trim().toLowerCase()===b.trim().toLowerCase()){
+        return true;
+    }
+    return false;
+}

@@ -13,7 +13,7 @@ export default function AppRouter(){
             <Switch>
                 <Route path='/users'><Users/></Route>
                 <Route path='/settings'><Settings/></Route>
-                <Route path='/video'><Video/></Route>
+                <Route path='/video/:title?/:type?'><Video/></Route>
                 <Route path='/profile'>Profile</Route>
                 <Route path='/'>Home</Route>
                 <Route><Redirect to={'/'}/></Route>

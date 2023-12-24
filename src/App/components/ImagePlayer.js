@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Alert from '@mui/material/Alert';
 
-export default function ImagePlayer({streamFile, videoRef}){
+export default function ImagePlayer({format, fullscreen}){
     const [error, setError] = useState(null);
+    const imgRef = useRef();
 
     useEffect(()=>{
-        if (!streamFile || !videoRef || !videoRef.current) return;
+        if (!format || format.type!=='jpg' || !imgRef || !imgRef.current) return;
         let timeoutId = null;
-        const video=videoRef.current;
         let lastBlob=null;
         let cancelling = false;
+
 
         async function updateImage(){
             try {
@@ -18,10 +19,10 @@ export default function ImagePlayer({streamFile, videoRef}){
                     method: "GET",
                     cache: "no-cache",
                 }
-                const response = await fetch('/api/cam/'+streamFile?.file, options);
+                const response = await fetch('/api/cam/'+format.file, options);
                 const blob = await response.blob();
                 const newBlob = URL.createObjectURL(blob);
-                video.src=newBlob;
+                imgRef.current.src=newBlob;
                 try{
                     if (lastBlob) URL.revokeObjectURL(lastBlob);
                 }catch(e){
@@ -36,12 +37,12 @@ export default function ImagePlayer({streamFile, videoRef}){
         }
 
         async function loadNext(){
+            if (cancelling) return;
             const beforeTime = (new Date()).getTime();
             const success = await updateImage();
             const afterTime = (new Date()).getTime();
             const loadOffset = afterTime-beforeTime;
-            if (cancelling) return;
-            const period = Math.max(0, 1/streamFile.fps*1000 - loadOffset);
+            const period = Math.max(0, 1/format.fps*1000 - loadOffset);
             if (period<=0){
                 setError({type: 'warning', text: 'network is slower than the servers frame rate'});
             }else if (!success){
@@ -63,15 +64,13 @@ export default function ImagePlayer({streamFile, videoRef}){
                 clearTimeout(timeoutId);
             }
         }
-    }, [streamFile, videoRef]);
+    }, [format]);
+
+    
+    if (!format || format.type!=='jpg') return null;
 
     return <>
-        {
-            error?
-                <Alert variant='filled' severity={error.type}>{error.text}</Alert>
-            :
-                null
-        }
-        <img style={{width:'100%', height:'100%'}} ref={videoRef} alt=''></img>
+        <Alert variant='standard' severity={error?.type} style={{width:'100%', ...(fullscreen?{position:'fixed', bottom:"0px", left:'0px', width:'100dvw'}:{}), ...(error?{}:{display:'none'})}}>{error?.text}</Alert>
+        <img ref={imgRef} style={{objectFit:'contain', maxWidth:'100dvw', maxHeight:'100dvh'}} alt=''></img>
     </>
 }

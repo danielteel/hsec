@@ -3,7 +3,8 @@ import { Paper, Button, IconButton, Typography, Container } from '@mui/material'
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import ImageIcon from '@mui/icons-material/Image';
 import EditIcon from '@mui/icons-material/Edit';
-import Grid from '@mui/material/Grid'; // Grid version 2
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import Grid from '@mui/material/Grid';
 
 import ApiContext from '../../contexts/ApiContext';
 import Title from './Title';
@@ -18,6 +19,7 @@ export default function Settings() {
 
     const [editItem, setEditItem] = useState({ open: false, item: null });
     const [addOpen, setAddOpen] = useState(false);
+    const [addDefaults, setAddDefaults] = useState(null);
 
 
     useEffect(() => {
@@ -40,27 +42,30 @@ export default function Settings() {
 
     return (
         <Container maxWidth='sm'>
-            <Paper sx={{ p: 1, display: 'flex', flexDirection: 'column' }}>
+            <Paper sx={{ p: 1, m:-2, display: 'flex', flexDirection: 'column' }}>
                 <EditFormatDialog api={api} formats={formats} setFormats={setFormats} editItem={editItem} setEditItem={() => setEditItem({ open: false, item: null })} />
-                <AddFormatDialog api={api} formats={formats} setFormats={setFormats} open={addOpen} setOpen={setAddOpen} />
+                <AddFormatDialog api={api} formats={formats} setFormats={setFormats} open={addOpen} setOpen={setAddOpen} defaultValues={addDefaults} />
                 <Title>Camera Formats</Title>
                 <Grid container alignItems={'center'}>
                     <Grid item xs={2}>
                         <Typography variant='subtitle1'>Type</Typography>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={3}>
                         <Typography variant='subtitle1'>Title</Typography>
                     </Grid>
                     <Grid item xs={3}>
                         <Typography variant='subtitle1'>Size</Typography>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={4}>
                     </Grid>
                     {formats?.map((row, i) => (<React.Fragment key={row.file + row.title}>
                         <Grid item xs={2}>{row.type === 'hls' ? <CameraAltIcon /> : <ImageIcon />}</Grid>
-                        <Grid item xs={4}><Typography variant='body2'>{row.title}</Typography></Grid>
+                        <Grid item xs={3}><Typography variant='body2'>{row.title}</Typography></Grid>
                         <Grid item xs={3}><Typography variant='body2'>{row.w + 'x' + row.h}</Typography></Grid>
-                        <Grid item textAlign='end' xs={3}><IconButton onClick={() => setEditItem({ open: true, item: row })}><EditIcon /></IconButton></Grid>
+                        <Grid item textAlign='end' xs={4}><IconButton color="primary" onClick={() => {
+                            setAddOpen(true);
+                            setAddDefaults(row);
+                        }}><ContentCopyIcon /></IconButton><IconButton color="primary" onClick={() => setEditItem({ open: true, item: row })}><EditIcon /></IconButton></Grid>
                     </React.Fragment>))}
                     {
                         !formats?.length ?

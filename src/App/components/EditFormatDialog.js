@@ -42,7 +42,7 @@ function getNumberLiteral(text) {
 }
 
 
-export default function EditFormatDialog({ api, formats, setFormats, editItem, setEditItem, deleteItem }) {
+export default function EditFormatDialog({ api, formats, setFormats, editItem, setEditItem }) {
     const [error, setError] = useState(null);
     const [type, setType] = useState('');
     const [file, setFile] = useState('');
@@ -52,6 +52,7 @@ export default function EditFormatDialog({ api, formats, setFormats, editItem, s
     const [quality, setQuality] = useState('');
     const [fps, setFps] = useState('');
     const [block, setBlock] = useState('');
+    const [filter, setFilter] = useState('');
 
     const [inProgress, setInProgress] = useState(null);
 
@@ -64,6 +65,7 @@ export default function EditFormatDialog({ api, formats, setFormats, editItem, s
         setQuality(editItem?.item?.qual || '');
         setFps(editItem?.item?.fps || '');
         setBlock(editItem?.item?.block || '');
+        setFilter(editItem?.item?.filter || '');
         setError(null);
     }, [editItem]);
 
@@ -103,7 +105,7 @@ export default function EditFormatDialog({ api, formats, setFormats, editItem, s
             if (type==='hls' && !fileUpdate.endsWith('.m3u8')) fileUpdate+='.m3u8';
             if (type==='jpg' && !fileUpdate.endsWith('.jpg')) fileUpdate+='.jpg';
 
-            const updateRecord = {id: editItem?.item?.id, type, file: fileUpdate, title: titleUpdate, w: Number(width), h: Number(height), qual: Number(quality), fps: Number(fps), block: Number(block)};
+            const updateRecord = {id: editItem?.item?.id, type, file: fileUpdate, title: titleUpdate, w: Number(width), h: Number(height), qual: Number(quality), fps: Number(fps), block: Number(block), filter: String(filter)};
             
             const [passed, newFormats] = await api.camUpdate(updateRecord);
             if (passed) {
@@ -135,14 +137,15 @@ export default function EditFormatDialog({ api, formats, setFormats, editItem, s
                     <Button variant={type === 'hls' ? 'contained' : 'outlined'} onClick={() => setType('hls')}>HLS</Button>
                     <Button variant={type === 'jpg' ? 'contained' : 'outlined'} onClick={() => setType('jpg')}>JPG</Button>
                 </ButtonGroup>
-                <TextField disabled                             fullWidth margin='dense' label='Id'      value={editItem?.item?.id || ''}/>
+                <TextField disabled                               fullWidth margin='dense' label='Id'      value={editItem?.item?.id || ''}/>
                 <TextField disabled={!!inProgress}                fullWidth margin='dense' label='File'    value={file}    onChange={e=>setFile(e.target.value)}/>
                 <TextField disabled={!!inProgress}                fullWidth margin='dense' label='Title'   value={title}   onChange={e=>setTitle(e.target.value)}/>
                 <TextField disabled={!!inProgress}                fullWidth margin='dense' label='Width'   value={width}   onChange={e=>setWidth(getNumberLiteral(e.target.value))}/>
                 <TextField disabled={!!inProgress}                fullWidth margin='dense' label='Height'  value={height}  onChange={e=>setHeight(getNumberLiteral(e.target.value))}/>
-                <TextField disabled={!!inProgress}                fullWidth margin='dense' label='Quality' value={quality} onChange={e=>setQuality(getNumberLiteral(e.target.value))}/>
+                <TextField disabled={!!inProgress}                fullWidth margin='dense' label={type==='hls'?'Quality (0-51)':'Quality (2-31)'} value={quality} onChange={e=>setQuality(getNumberLiteral(e.target.value))}/>
                 <TextField disabled={!!inProgress}                fullWidth margin='dense' label='FPS'     value={fps}     onChange={e=>setFps(getNumberLiteral(e.target.value))}/>
                 <TextField disabled={!!inProgress||type!=='hls'}  fullWidth margin='dense' label='Block'   value={block}   onChange={e=>setBlock(getNumberLiteral(e.target.value))}/>
+                <TextField disabled={!!inProgress}                fullWidth margin='dense' label='Filter'  value={filter} onChange={e=>setFilter(e.target.value)}/>
             </DialogContent>
             <DialogActions disableSpacing>
                 <Alert style={error?{width:'100%'}:{display: 'none'}} variant='filled' severity={'error'}>{error}</Alert>

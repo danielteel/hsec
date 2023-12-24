@@ -24,7 +24,7 @@ import useScrollTrigger from '@mui/material/useScrollTrigger';
 import Slide from '@mui/material/Slide';
 
 import AppRouter from './AppRouter';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import LogoutButton from './components/LogoutButton';
 
 import Copyright from '../common/Copyright';
@@ -90,15 +90,22 @@ function HideOnScroll({children, element}) {
     );
   }
 
-const MenuItemLink = ({ text, icon, href }) => {
+const MenuItemLink = ({ selected, text, icon, href }) => {
     return (
         <Link href={href}>
-            <ListItemButton>
+            <ListItemButton selected={selected}>
                 <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText primary={text} />
             </ListItemButton>
         </Link>
     );
+}
+
+
+function hrefMatchesLocation(href, location){
+    if (href==='/' && location.length>2) return false;
+    if (location.substring(0, href.length)===href) return true;
+    return false;
 }
 
 const navigationItems = [
@@ -113,6 +120,7 @@ export default function App() {
     const contentRef = React.useRef();
     const [content, setContent] = React.useState(undefined);
     const [open, setOpen] = React.useState(false);
+    const [location, setLocation] = useLocation();
 
     const {user} = React.useContext(UserContext);
 
@@ -144,14 +152,15 @@ export default function App() {
                     {
                         navigationItems.map((item) => {
                             if (meetsMinRole(user.role, item.minRole)){
-                                return <MenuItemLink href={item.href} icon={item.icon}/>;
+                                const selected=hrefMatchesLocation(item.href, location);
+                                return <MenuItemLink selected={selected} key={item.href} href={item.href} icon={item.icon}/>;
                             }
                             return null;
                         })
                     }
                 </List>
             </Drawer>
-            <Box ref={contentRef} component="main" sx={{backgroundColor: (theme) => theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900], flexGrow: 1, height:'100vh', display: 'flex', flexDirection:'column', overflow: 'auto'}}>
+            <Box ref={contentRef} component="main" sx={{backgroundColor: (theme) => theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900], flexGrow: 1, height:'100dvh', display: 'flex', flexDirection:'column', overflow: 'auto'}}>
                 <Toolbar />{/*use this to align content correctly*/}
                 <Container maxWidth='lg' sx={{my: 3, flexGrow: 1, display: 'flex', flexDirection:'column'}}>
                     <AppRouter/>

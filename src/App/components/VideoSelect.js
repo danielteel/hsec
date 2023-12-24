@@ -1,73 +1,31 @@
-import { useEffect, useState, useContext } from 'react';
-import ApiContext from '../../contexts/ApiContext';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
-import Hls from 'hls.js';
+import { useLocation, useParams } from 'wouter';
+import { laxStringsEqual } from '../../common/common';
+import SettingsOverscanIcon from '@mui/icons-material/SettingsOverscan';
+import CloseIcon from '@mui/icons-material/Close';
+import { IconButton } from '@mui/material';
 
+export default function VideoSelect({formats, fullscreen, toggleFullscreen}){
+    const [, setLocation] = useLocation();
+    const params = useParams();
+    const title = decodeURI(params?.title);
 
-export default function VideoSelect({streamFile, setStreamFile, videoRef}){
-    const {camGetDetails} = useContext(ApiContext);
-    const [hlsDetails, setHlsDetails] = useState(null);
-
-    useEffect(()=>{
-        if (hlsDetails) return;
-
-        let cancel=false;
-        let fetchTimeoutId = null;
-        async function fetchFormats(){
-            fetchTimeoutId=null;
-            const [passed, fetchedDetails] = await camGetDetails();
-            if (passed){
-                if (Array.isArray(fetchedDetails) && fetchedDetails.length>0){
-                    setHlsDetails(fetchedDetails);
-                    if (!streamFile || !fetchedDetails.find(f => f.name===streamFile)){
-                        setStreamFile(fetchedDetails[0]);
-                    }
-                    return;
-                }
-            }
-            if (cancel) return;
-            fetchTimeoutId=setTimeout(fetchFormats, 4000);
-        }
-        
-        fetchFormats();
-
-        return ()=>{
-            cancel=true;
-            if (fetchTimeoutId){
-                clearTimeout(fetchTimeoutId);
-                fetchTimeoutId=null;
-            }
-        }
-    }, [camGetDetails, streamFile, hlsDetails, setStreamFile]);
-
-    return <div style={{display:'flex', marginBottom:3, flexWrap:'wrap'}}>
-            <ButtonGroup style={{flexWrap:'wrap'}}>
+    return <div style={{display:'flex', padding:'2px', flexWrap:'wrap', ...(fullscreen?{position:'fixed', top:'0px', left:'0px', width:'100dvw', zIndex:99999}:{})}}>
+            <ButtonGroup style={{flexWrap:'wrap', ...(fullscreen?{backgroundColor:'#FFF9'}:{})}}>
             {
-                hlsDetails?.map?.(details => {
-                    return <Button key={streamFile.file} variant={streamFile.title===details.title?'contained':'outlined'} onClick={()=>{
-                        setStreamFile(details);
-                    }}>{details.title}</Button>
+                formats?.map?.(format => {
+                    return <Button key={format.file} variant={laxStringsEqual(format.title, title)?'contained':'outlined'} onClick={()=>{
+                        setLocation('/video/'+format.title+'/'+format.type);
+                    }}>{format.title}</Button>
                 })
             }
             </ButtonGroup>
-            {
-                Hls.isSupported()
-                ?
-                <>
-                    <Button style={{marginLeft:'auto'}} variant='text' color='info' onClick={()=>{
-                        if (videoRef.current.requestFullscreen) {
-                            videoRef.current.requestFullscreen();
-                        } else if (videoRef.current.webkitRequestFullscreen) { /* Safari */
-                            videoRef.current.webkitRequestFullscreen();
-                        } else if (videoRef.current.msRequestFullscreen) { /* IE11 */
-                            videoRef.current.msRequestFullscreen();
-                        }
-                    }}>Fullscreen</Button>
-                </>
-                :
-                    null
-            }
+            <ButtonGroup style={{marginLeft:'auto', ...(fullscreen?{backgroundColor:'white'}:{})}}>
+                <IconButton variant={fullscreen?'contained':'text'} color={fullscreen?'error':'primary'} onClick={()=>{
+                    toggleFullscreen();
+                }}>{fullscreen?<CloseIcon/>:<SettingsOverscanIcon/>}</IconButton>
+            </ButtonGroup>
     </div>
 
 }

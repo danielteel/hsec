@@ -1,3 +1,8 @@
+const equal = require('fast-deep-equal');
+
+let lastFormats = [];
+
+
 
 export async function camGetDetails(){
     try {
@@ -12,6 +17,10 @@ export async function camGetDetails(){
             }
             return 0;
         })
+        if (equal(lastFormats, formats)){
+            return [response.status>=200 && response.status<=299, lastFormats, response.status];
+        }
+        lastFormats=formats;
         return [response.status>=200 && response.status<=299, formats, response.status];
     }catch(e){
     }
@@ -38,6 +47,10 @@ export async function camAdd(obj){
             }
             return 0;
         })
+        if (equal(lastFormats, formats)){
+            return [response.status>=200 && response.status<=299, lastFormats, response.status];
+        }
+        lastFormats=formats;
         return [response.status>=200 && response.status<=299, formats, response.status];
     }catch (e){
     }
@@ -65,6 +78,10 @@ export async function camDelete(which){
             }
             return 0;
         })
+        if (equal(lastFormats, formats)){
+            return [response.status>=200 && response.status<=299, lastFormats, response.status];
+        }
+        lastFormats=formats;
         return [response.status>=200 && response.status<=299, formats, response.status];
     }catch (e){
     }
@@ -92,6 +109,10 @@ export async function camUpdate(obj){
             }
             return 0;
         })
+        if (equal(lastFormats, formats)){
+            return [response.status>=200 && response.status<=299, lastFormats, response.status];
+        }
+        lastFormats=formats;
         return [response.status>=200 && response.status<=299, formats, response.status];
     }catch (e){
     }

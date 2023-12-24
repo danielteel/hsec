@@ -1,4 +1,4 @@
-import {  useState } from 'react';
+import {  useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -42,7 +42,7 @@ function getNumberLiteral(text) {
 }
 
 
-export default function AddFormatDialog({ api, formats, setFormats, open, setOpen }) {
+export default function AddFormatDialog({ api, formats, setFormats, open, setOpen, defaultValues }) {
     const [error, setError] = useState(null);
     const [type, setType] = useState('hls');
     const [file, setFile] = useState('');
@@ -52,9 +52,21 @@ export default function AddFormatDialog({ api, formats, setFormats, open, setOpe
     const [quality, setQuality] = useState('26');
     const [fps, setFps] = useState('2');
     const [block, setBlock] = useState('2');
+    const [filter, setFilter] = useState('');
 
     const [inProgress, setInProgress] = useState(null);
 
+    useEffect(() => {
+        console.log(defaultValues);
+        if (defaultValues?.type) setType(defaultValues?.type);
+        if (defaultValues?.w) setWidth(defaultValues?.w);
+        if (defaultValues?.h) setHeight(defaultValues?.h);
+        if (defaultValues?.qual) setQuality(defaultValues?.qual);
+        if (defaultValues?.fps) setFps(defaultValues?.fps);
+        if (defaultValues?.block) setBlock(defaultValues?.block);
+        if (defaultValues?.filter) setFilter(defaultValues?.filter);
+        setError(null);
+    }, [defaultValues]);
 
     const handleClose = () => {
         if (!inProgress) setOpen(false);
@@ -72,7 +84,7 @@ export default function AddFormatDialog({ api, formats, setFormats, open, setOpe
             if (type==='hls' && !fileUpdate.endsWith('.m3u8')) fileUpdate+='.m3u8';
             if (type==='jpg' && !fileUpdate.endsWith('.jpg')) fileUpdate+='.jpg';
 
-            const addRecord = {type, file: fileUpdate, title: titleUpdate, w: Number(width), h: Number(height), qual: Number(quality), fps: Number(fps), block: Number(block)};
+            const addRecord = {type, file: fileUpdate, title: titleUpdate, w: Number(width), h: Number(height), qual: Number(quality), fps: Number(fps), block: Number(block), filter: String(filter)};
             
             const [passed, newFormats] = await api.camAdd(addRecord);
             if (passed) {
@@ -108,9 +120,10 @@ export default function AddFormatDialog({ api, formats, setFormats, open, setOpe
                 <TextField disabled={!!inProgress}                fullWidth margin='dense' label='Title'   value={title}   onChange={e=>setTitle(e.target.value)}/>
                 <TextField disabled={!!inProgress}                fullWidth margin='dense' label='Width'   value={width}   onChange={e=>setWidth(getNumberLiteral(e.target.value))}/>
                 <TextField disabled={!!inProgress}                fullWidth margin='dense' label='Height'  value={height}  onChange={e=>setHeight(getNumberLiteral(e.target.value))}/>
-                <TextField disabled={!!inProgress}                fullWidth margin='dense' label='Quality' value={quality} onChange={e=>setQuality(getNumberLiteral(e.target.value))}/>
+                <TextField disabled={!!inProgress}                fullWidth margin='dense' label={type==='hls'?'Quality (0-51)':'Quality (2-31)'} value={quality} onChange={e=>setQuality(getNumberLiteral(e.target.value))}/>
                 <TextField disabled={!!inProgress}                fullWidth margin='dense' label='FPS'     value={fps}     onChange={e=>setFps(getNumberLiteral(e.target.value))}/>
                 <TextField disabled={!!inProgress||type!=='hls'}  fullWidth margin='dense' label='Block'   value={block}   onChange={e=>setBlock(getNumberLiteral(e.target.value))}/>
+                <TextField disabled={!!inProgress}                fullWidth margin='dense' label='Filter'  value={filter}  onChange={e=>setFilter(e.target.value)}/>
             </DialogContent>
             <DialogActions>
                 {error}
