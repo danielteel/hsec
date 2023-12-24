@@ -33,7 +33,8 @@ export default function UserEditDialog({user, open, setOpen, updateUser}) {
         if (!inProgress) setOpen(false);
     };
 
-    const handleUpdate = async () => {
+    const handleUpdate = async (e) => {
+        e.preventDefault();
         setInProgress(true);
         setError(null);
         try{
@@ -52,28 +53,30 @@ export default function UserEditDialog({user, open, setOpen, updateUser}) {
 
     return (
         <Dialog open={open} onClose={handleClose}>
-            <DialogTitle sx={{py:'12px'}}>Edit User</DialogTitle>
-            <DialogContent>
-                <TextField fullWidth margin='dense' label='Id'    value={user?.user_id || ''} disabled/>
-                <TextField fullWidth margin='dense' label='Email' value={email} onChange={(e)=>setEmail(e.target.value)} disabled={true}/>
-                <FormControl fullWidth  disabled={inProgress}>
-                    <InputLabel id="edit-user-role-label">Role</InputLabel>
-                    <Select labelId="edit-user-role-label" value={role} label="Role" onChange={(e)=>setRole(e.target.value)}>
-                        <MenuItem value='unverified'>unverified</MenuItem>
-                        <MenuItem value='member'>Member</MenuItem>
-                        <MenuItem value='manager'>Manager</MenuItem>
-                        <MenuItem value='admin'>Admin</MenuItem>
-                        <MenuItem value='super'>Super</MenuItem>
-                    </Select>
-                </FormControl>
-            </DialogContent>
-            <DialogActions disableSpacing>
-                <Alert style={error?{width:'100%'}:{display: 'none'}} variant='filled' severity={'error'}>{error}</Alert>
-            </DialogActions>
-            <DialogActions>
-                <Button        disabled={inProgress} variant='contained' color='primary' onClick={handleClose}>Cancel</Button>
-                <LoadingButton loading={inProgress}  variant='contained' color='success' onClick={handleUpdate}>Update</LoadingButton>
-            </DialogActions>
+            <form onSubmit={handleUpdate}>
+                <DialogTitle sx={{py:'12px'}}>Edit User</DialogTitle>
+                <DialogContent>
+                    <TextField fullWidth margin='dense' label='Id'    value={user?.user_id || ''} disabled/>
+                    <TextField fullWidth margin='dense' label='Email' value={email} onChange={(e)=>setEmail(e.target.value)} disabled={true}/>
+                    <FormControl fullWidth  disabled={inProgress}>
+                        <InputLabel id="edit-user-role-label">Role</InputLabel>
+                        <Select labelId="edit-user-role-label" value={role} label="Role" onChange={(e)=>setRole(e.target.value)}>
+                            <MenuItem value='unverified'>Unverified</MenuItem>
+                            <MenuItem value='member'>Member</MenuItem>
+                            <MenuItem value='manager'>Manager</MenuItem>
+                            <MenuItem value='admin'>Admin</MenuItem>
+                            <MenuItem value='super'>Super</MenuItem>
+                        </Select>
+                    </FormControl>
+                </DialogContent>
+                <DialogActions disableSpacing>
+                    <Alert style={error?{width:'100%'}:{display: 'none'}} variant='filled' severity={'error'}>{error}</Alert>
+                </DialogActions>
+                <DialogActions>
+                    <Button        disabled={inProgress} variant='contained' color='primary' onClick={handleClose}>Cancel</Button>
+                    <LoadingButton loading={inProgress}  variant='contained' color='success' type='submit'>Update</LoadingButton>
+                </DialogActions>
+            </form>
         </Dialog>
     );
 }

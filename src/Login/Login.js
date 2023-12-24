@@ -1,6 +1,5 @@
 import { useContext, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -15,7 +14,6 @@ import { userLogin } from '../api/user';
 
 import { Link as WouterLink } from 'wouter';
 import Copyright from '../common/Copyright';
-import { Hidden } from '@mui/material';
 
 
 export default function Login() {

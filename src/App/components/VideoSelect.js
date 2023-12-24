@@ -9,7 +9,8 @@ import { IconButton } from '@mui/material';
 export default function VideoSelect({formats, fullscreen, toggleFullscreen}){
     const [, setLocation] = useLocation();
     const params = useParams();
-    const title = decodeURI(params?.title);
+    let title = decodeURI(params?.title);
+    if (!params?.title) title=formats?.[0]?.title;
 
     return <div style={{display:'flex', padding:'2px', flexWrap:'wrap', ...(fullscreen?{position:'fixed', top:'0px', left:'0px', width:'100dvw', zIndex:99999}:{})}}>
             <ButtonGroup style={{flexWrap:'wrap', ...(fullscreen?{backgroundColor:'#FFF9'}:{})}}>

@@ -14,7 +14,7 @@ export default function Video(){
     const api=useContext(ApiContext);
     const params = useParams();
     const title=decodeURIComponent(params?.title);
-    const format = formats?.find(f => f.title===title);
+    const format = formats?.find(f => f.title===title) || formats[0];
 
 
     useEffect(()=>{
