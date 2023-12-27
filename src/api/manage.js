@@ -12,14 +12,14 @@ export async function manageUsers(roleFilter){
     return [false, 'failed', 400];
 }
 
-export async function manageUserRole(user_id, new_role){
+export async function manageUserRole(userId, newRole){
     try{
         const options = {
             credentials: 'include',
             method: "POST",
             cache: "no-cache",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({new_role, user_id})
+            body: JSON.stringify({userId, newRole})
         };
         const response = await fetch('/api/manage/user/role', options);
         return [response.status>=200 && response.status<=299, await response.json(), response.status];
@@ -28,14 +28,14 @@ export async function manageUserRole(user_id, new_role){
     return [false, 'failed', 400];
 }
 
-export async function manageUserEmail(user_id, new_email){
+export async function manageUserEmail(userId, newEmail){
     try{
         const options = {
             credentials: 'include',
             method: "POST",
             cache: "no-cache",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({new_email, user_id})
+            body: JSON.stringify({userId, newEmail})
         };
         const response = await fetch('/api/manage/user/email', options);
         return [response.status>=200 && response.status<=299, await response.json(), response.status];

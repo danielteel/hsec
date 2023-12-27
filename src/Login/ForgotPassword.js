@@ -1,6 +1,5 @@
 import { useContext, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -34,7 +33,7 @@ export default function ForgotPassword() {
             const email = data.get('email');
             
             if (isValidEmail(email)){
-                const [passed, message] = await api.userPasswordChange(email);
+                const [passed, message] = await api.userForgotStart(email);
                 if (passed) {
                     setLocation('/verifyforgot/'+email);
                 }else{

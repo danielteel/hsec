@@ -1,6 +1,5 @@
 import { useContext, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -44,7 +43,7 @@ export default function VerifyForgot() {
                 if (passFailFor){
                     setError('Bad password: '+passFailFor);
                 }else{
-                    const [passed, message] = await api.userPasswordChange(email, newPassword, confirmationCode);
+                    const [passed, message] = await api.userForgotEnd(email, newPassword, confirmationCode);
                     if (passed) {
                         const [loggedIn, fetchedUser] = await api.userLogin(email, newPassword);
                         if (loggedIn){            

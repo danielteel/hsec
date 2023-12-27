@@ -15,7 +15,6 @@ import HomeIcon from '@mui/icons-material/Home';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import CameraIndoorIcon from '@mui/icons-material/CameraIndoor';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PeopleIcon from '@mui/icons-material/People';
 import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';

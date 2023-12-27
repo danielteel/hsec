@@ -38,7 +38,38 @@ export async function userLogout(){
 }
 
 
-export async function userPasswordChange(email, newPassword, confirmCode){
+export async function userChangePassword(oldPassword, newPassword){
+    try{
+        const options = {
+            credentials: 'include',
+            method: "POST",
+            cache: "no-cache",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({oldPassword, newPassword})
+        };
+        const response = await fetch('/api/user/changepassword', options);
+        return [response.status>=200 && response.status<=299, await response.json(), response.status];
+    }catch (e){
+        return [false, 'failed', 400];
+    }
+}
+
+export async function userForgotStart(email){
+    try{
+        const options = {
+            credentials: 'include',
+            method: "POST",
+            cache: "no-cache",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({email})
+        };
+        const response = await fetch('/api/user/forgotstart', options);
+        return [response.status>=200 && response.status<=299, await response.json(), response.status];
+    }catch (e){
+        return [false, 'failed', 400];
+    }
+}
+export async function userForgotEnd(email, newPassword, confirmCode){
     try{
         const options = {
             credentials: 'include',
@@ -47,49 +78,66 @@ export async function userPasswordChange(email, newPassword, confirmCode){
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({email, newPassword, confirmCode})
         };
-        const response = await fetch('/api/user/passwordchange', options);
+        const response = await fetch('/api/user/forgotend', options);
         return [response.status>=200 && response.status<=299, await response.json(), response.status];
     }catch (e){
         return [false, 'failed', 400];
     }
 }
 
-export async function userGetChangeEmail(){
-    try{
-        const response = await fetch('/api/user/getchangeemail', {credentials: 'include'});
-        return [response.status>=200 && response.status<=299, await response.json(), response.status];
-    }catch (e){
-        return [false, 'failed', 400];
-    }
-}
 
-export async function userChangeEmail(newEmail, verifyCode){
-    try{
-        const body={};
-        if (newEmail) body.newEmail=newEmail;
-        if (verifyCode) body.verifyCode=verifyCode;
+
+export async function userChangeEmailEnd(confirmCode){
+    try {
         const options = {
             credentials: 'include',
             method: "POST",
             cache: "no-cache",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(body)
+            body: JSON.stringify({confirmCode})
         };
-        const response = await fetch('/api/user/changeemail', options);
+        const response = await fetch('/api/user/changemailend', options);
         return [response.status>=200 && response.status<=299, await response.json(), response.status];
     }catch (e){
         return [false, 'failed', 400];
     }
 }
 
-export async function userVerifyEmail(email, password, verifyCode){
+export async function userChangeEmailStart(newEmail, password){
+    try {
+        const options = {
+            credentials: 'include',
+            method: "POST",
+            cache: "no-cache",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({newEmail, password})
+        };
+        const response = await fetch('/api/user/changemailstart', options);
+        return [response.status>=200 && response.status<=299, await response.json(), response.status];
+
+    }catch (e){
+        return [false, 'failed', 400];
+    }
+}
+
+export async function userChangeEmailStatus(){
+    try{
+        const response = await fetch('/api/user/changemailstatus', {credentials: 'include'});
+        return [response.status>=200 && response.status<=299, await response.json(), response.status];
+    }catch (e){
+        return [false, 'failed', 400];
+    }
+}
+
+
+export async function userVerifyEmail(email, password, confirmCode){
     try{
         const options = {
             credentials: 'include',
             method: "POST",
             cache: "no-cache",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({email, password, verifyCode})
+            body: JSON.stringify({email, password, confirmCode})
         };
         const response = await fetch('/api/user/verifyemail', options);
         return [response.status>=200 && response.status<=299, await response.json(), response.status];

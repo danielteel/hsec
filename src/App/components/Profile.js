@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Typography } from '@mui/material';
+import { Alert, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Title from './Title';
@@ -8,23 +8,14 @@ import { Container } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import UserContext from '../../contexts/UserContext';
 import Box from '@mui/material/Box';
-import { useLocation, useParams } from 'wouter';
-import { laxStringsEqual } from '../../common/common';
 import { LoadingButton } from '@mui/lab';
 
 export default function Profile() {
     const {user} = useContext(UserContext);
-    const [location, setLocation] = useLocation();
-    const params=useParams();
-    const paramEmail= params?.email?decodeURIComponent(params?.email):null;
-    const paramConfirmCode=laxStringsEqual(paramEmail, user.email) ? params?.confirmCode ? decodeURIComponent(params?.confirmCode) : null : null;
-    if (paramEmail && !paramConfirmCode){
-        setLocation('/profile');
-    }
 
     const api = useContext(ApiContext);
-    const [changePasswordOpen, setChangePasswordOpen] = useState(!!paramConfirmCode);
-    const [confirmCode, setConfirmCode] = useState(paramConfirmCode || '');
+    const [changePasswordOpen, setChangePasswordOpen] = useState('');
+    const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [newPasswordAgain, setNewPasswordAgain] = useState('');
 
@@ -35,19 +26,15 @@ export default function Profile() {
         if (inProgress && !overrideInprogress) return;
         setInProgress(false);
         setChangePasswordError(null);
-        setConfirmCode('');
+        setOldPassword('');
         setNewPassword('');
         setNewPasswordAgain('');
         setChangePasswordOpen(false);
-        setLocation('/profile');
     }
 
-    const handleOpenPasswordReset = async () => {
+    const handleChangePasswordOpen = async () => {
         setChangePasswordError(null);
         setChangePasswordOpen(true);
-        setInProgress(true);
-        await api.userPasswordChange(user.email, null, null);
-        setInProgress(false);
     }
 
     const handleChangePassword = async (e) => {
@@ -59,10 +46,12 @@ export default function Profile() {
                 setChangePasswordError('Passwords dont match, double check that they are the same');
             }else if (!newPassword.trim()){
                 setChangePasswordError('Password cant be empty or just spaces');
-            }else if (!confirmCode.trim()){
-                setChangePasswordError('Confirmation code cannot be empty');
+            }else if (!oldPassword.trim()){
+                setChangePasswordError('Current password cant be empty or just spaces');
+            }else if (oldPassword===newPassword){
+                setChangePasswordError('New password cannot be the same as the current password');
             }else{
-                const [passed, response] = await api.userPasswordChange(user.email, newPassword, confirmCode);
+                const [passed, response] = await api.userChangePassword(oldPassword, newPassword);
                 if (!passed){
                     setChangePasswordError('Error: '+response.error);
                 }else{
@@ -83,11 +72,8 @@ export default function Profile() {
                         Change Password
                     </DialogTitle>
                     <DialogContent>
-                    <DialogContentText>
-                        Check your email for the confirmation code
-                    </DialogContentText>
                         <TextField disabled={true} fullWidth margin='dense' label='Email' type='email' value={user?.email}/>
-                        <TextField disabled={inProgress} fullWidth margin='dense' label='Confirmation Code' required autoComplete='one-time-code' value={confirmCode} onChange={(e)=>setConfirmCode(e.target.value)}/>
+                        <TextField disabled={inProgress} fullWidth margin='dense' label='Old password' required autoComplete='password' value={oldPassword} onChange={(e)=>setOldPassword(e.target.value)}/>
                         <TextField disabled={inProgress} fullWidth margin='dense' label='New password' type='password' autoComplete='new-password' required value={newPassword} onChange={(e)=>setNewPassword(e.target.value)}/>
                         <TextField disabled={inProgress} fullWidth margin='dense' label='Confirm password' type='password' autoComplete='new-password' required value={newPasswordAgain} onChange={(e)=>setNewPasswordAgain(e.target.value)}/>
                     </DialogContent>
@@ -120,7 +106,7 @@ export default function Profile() {
                             <Button variant='outlined' fullWidth disabled>Change Email</Button>
                         </Grid>
                         <Grid item sm={12} lg={4}>
-                            <Button variant='outlined' fullWidth onClick={handleOpenPasswordReset}>Change Password</Button>
+                            <Button variant='outlined' fullWidth onClick={handleChangePasswordOpen}>Change Password</Button>
                         </Grid>
                         <Grid item sm={12} lg={4}>
                             <Button variant='outlined' fullWidth disabled>Sign out everywhere</Button>

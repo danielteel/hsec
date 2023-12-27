@@ -6,7 +6,7 @@ import App from './App/App';
 import Authenticate from './Login/Authenticate';
 
 import UserContext from './contexts/UserContext';
-import ApiContext, {buildApiContext} from './contexts/ApiContext';
+import ApiContext, {setSetUser} from './contexts/ApiContext';
 
 import { userMe } from './api/user';
 
@@ -34,7 +34,7 @@ export default function Main() {
         );
     } else {
         return (
-            <ApiContext.Provider value={buildApiContext(setUser)}>
+            <ApiContext.Provider value={setSetUser(setUser)}>
             <UserContext.Provider value={{ user, setUser }}>
                 {
                     user ?

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
 import Title from './Title';
 import ApiContext from '../../contexts/ApiContext';
 import { Container } from '@mui/material';

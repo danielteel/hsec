@@ -25,7 +25,6 @@ export default function AppRouter(){
                 <Route path='/settings'><Settings/></Route>
                 <Route path='/video/:title?/:type?'><Video/></Route>
                 <Route path='/profile/:email?/:confirmCode?'><Profile/></Route>
-                <Route path='/verifyforgot/:email?/:confirmCode?'><RedirectWithParams to={'/profile'} params={['email', 'confirmCode']}/></Route>
                 <Route path='/'>Home</Route>
                 <Route><Redirect to={'/'}/></Route>
             </Switch>
