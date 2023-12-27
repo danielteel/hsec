@@ -73,9 +73,9 @@ export default function Profile() {
                     </DialogTitle>
                     <DialogContent>
                         <TextField disabled={true} fullWidth margin='dense' label='Email' type='email' value={user?.email}/>
-                        <TextField disabled={inProgress} fullWidth margin='dense' label='Old password' required autoComplete='password' value={oldPassword} onChange={(e)=>setOldPassword(e.target.value)}/>
+                        <TextField disabled={inProgress} fullWidth margin='dense' label='Old password' type="password" required autoComplete="one-time-code" value={oldPassword} onChange={(e)=>setOldPassword(e.target.value)}/>
                         <TextField disabled={inProgress} fullWidth margin='dense' label='New password' type='password' autoComplete='new-password' required value={newPassword} onChange={(e)=>setNewPassword(e.target.value)}/>
-                        <TextField disabled={inProgress} fullWidth margin='dense' label='Confirm password' type='password' autoComplete='new-password' required value={newPasswordAgain} onChange={(e)=>setNewPasswordAgain(e.target.value)}/>
+                        <TextField disabled={inProgress} fullWidth margin='dense' label='Confirm new password' type='password' autoComplete='new-password' required value={newPasswordAgain} onChange={(e)=>setNewPasswordAgain(e.target.value)}/>
                     </DialogContent>
                     <DialogActions disableSpacing>
                         <Alert severity='error' sx={{width:'100%', ...(changePasswordError?{}:{display:'none'})}}>{changePasswordError}</Alert>
