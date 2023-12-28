@@ -37,6 +37,20 @@ export async function userLogout(){
     }
 }
 
+export async function userLogoutEverywhere(){
+    try{
+        const options = {
+            credentials: 'include',
+            method: "POST",
+            cache: "no-cache"
+        };
+        const response = await fetch('/api/user/logouteverywhere', options);
+        return [response.status>=200 && response.status<=299, await response.json(), response.status];
+    }catch (e){
+        return [false, 'failed', 400];
+    }
+}
+
 
 export async function userChangePassword(oldPassword, newPassword){
     try{

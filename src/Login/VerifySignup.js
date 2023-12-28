@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
@@ -9,8 +9,7 @@ import Container from '@mui/material/Container';
 
 
 import { Link as WouterLink, useParams } from 'wouter';
-import ApiContext from '../contexts/ApiContext';
-import UserContext from '../contexts/UserContext';
+import { useAppContext } from '../contexts/AppContext';
 import { Alert } from '@mui/material';
 import Copyright from '../common/Copyright';
 
@@ -19,8 +18,7 @@ import { LoadingButton } from '@mui/lab';
 
 
 export default function VerifySignup() {
-    const {setUser} = useContext(UserContext);
-    const api = useContext(ApiContext);
+    const {setUser, api} = useAppContext();
     const params = useParams();
     const [error, setError] = useState(null);
     const [inProgress, setInProgress] = useState(false);

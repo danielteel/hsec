@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
@@ -9,7 +9,7 @@ import Container from '@mui/material/Container';
 
 
 import { Link as WouterLink, useLocation, useParams } from 'wouter';
-import ApiContext from '../contexts/ApiContext';
+import {useAppContext} from '../contexts/AppContext';
 import { Alert } from '@mui/material';
 import Copyright from '../common/Copyright';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -17,7 +17,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { isValidEmail } from '../common/common';
 
 export default function ForgotPassword() {
-    const api = useContext(ApiContext);
+    const {api} = useAppContext();
     const [, setLocation] = useLocation();
     const [error, setError] = useState(null);
     const params = useParams();

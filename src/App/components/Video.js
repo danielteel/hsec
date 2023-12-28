@@ -1,17 +1,17 @@
 import VideoSelect from './VideoSelect';
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import VideoPlayer from './VideoPlayer';
 import { Backdrop, Dialog, Paper } from '@mui/material';
 import ImagePlayer from './ImagePlayer';
 import Title from './Title';
-import ApiContext from '../../contexts/ApiContext';
+import {useAppContext} from '../../contexts/AppContext';
 import { useParams } from 'wouter';
 
 
 export default function Video(){
     const [formats, setFormats] = useState([]);
     const [fullscreen, setFullscreen] = useState(false);
-    const api=useContext(ApiContext);
+    const {api} = useAppContext();
     const params = useParams();
     const title=decodeURIComponent(params?.title);
     const format = formats?.find(f => f.title===title) || formats[0];

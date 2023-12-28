@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Paper, Button, IconButton, Typography, Container } from '@mui/material';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import ImageIcon from '@mui/icons-material/Image';
@@ -6,7 +6,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import Grid from '@mui/material/Grid';
 
-import ApiContext from '../../contexts/ApiContext';
+import { useAppContext } from '../../contexts/AppContext';
 import Title from './Title';
 import EditFormatDialog from './EditFormatDialog';
 import AddFormatDialog from './AddFormatDialog';
@@ -14,7 +14,7 @@ import AddFormatDialog from './AddFormatDialog';
 
 
 export default function Settings() {
-    const api = useContext(ApiContext);
+    const {api} = useAppContext();
     const [formats, setFormats] = useState(null);
 
     const [editItem, setEditItem] = useState({ open: false, item: null });
@@ -24,7 +24,9 @@ export default function Settings() {
 
     useEffect(() => {
         let timeoutId = null;
+        let cancel=false;
         async function getFormats() {
+            if (cancel) return;
             const [passed, fetchedFormats] = await api.camGetDetails();
             if (passed) {
                 setFormats(fetchedFormats);
@@ -35,6 +37,7 @@ export default function Settings() {
         getFormats();
 
         return () => {
+            cancel=true;
             if (timeoutId) clearTimeout(timeoutId);
         }
     }, [api]);

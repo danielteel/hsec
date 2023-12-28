@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -9,15 +9,14 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { Alert, LoadingButton } from '@mui/lab';
-import UserContext from '../contexts/UserContext';
-import { userLogin } from '../api/user';
 
 import { Link as WouterLink } from 'wouter';
 import Copyright from '../common/Copyright';
+import { useAppContext } from '../contexts/AppContext';
 
 
 export default function Login() {
-    const {setUser} = useContext(UserContext);
+    const {setUser, api} = useAppContext();
     const [error, setError] = useState(null);
     const [inProgress, setInProgress] = useState(false);
 
@@ -27,7 +26,7 @@ export default function Login() {
         event.preventDefault();
         try{
             const data = new FormData(event.currentTarget);
-            const [passed, fetchedUser] = await userLogin(data.get('email'), data.get('password'), String(data.get('remember')).toLowerCase().trim()!=='on'?false:true);
+            const [passed, fetchedUser] = await api.userLogin(data.get('email'), data.get('password'), String(data.get('remember')).toLowerCase().trim()!=='on'?false:true);
             if (passed){
                 setUser(fetchedUser);
             }else{

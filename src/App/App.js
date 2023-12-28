@@ -28,7 +28,7 @@ import LogoutButton from './components/LogoutButton';
 
 import Copyright from '../common/Copyright';
 import { meetsMinRole } from '../common/common';
-import UserContext from '../contexts/UserContext';
+import { useAppContext } from '../contexts/AppContext';
 
 const drawerWidth = 240;
 
@@ -121,7 +121,7 @@ export default function App() {
     const [open, setOpen] = React.useState(false);
     const [location, setLocation] = useLocation();
 
-    const {user} = React.useContext(UserContext);
+    const {user} = useAppContext();
 
     React.useEffect(()=>{
         setContent(contentRef.current);

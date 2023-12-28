@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Title from './Title';
-import ApiContext from '../../contexts/ApiContext';
+import { useAppContext } from '../../contexts/AppContext';
 import { Container } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import EditIcon from '@mui/icons-material/Edit';
@@ -14,7 +14,7 @@ export default function User() {
     const [editOpen, setEditOpen] = useState(false);
     const [editUser, setEditUser] = useState(null);
 
-    const api = useContext(ApiContext);
+    const {api} = useAppContext();
 
     useEffect(() => {
         async function getUsers() {

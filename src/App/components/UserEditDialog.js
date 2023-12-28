@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Alert } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import ApiContext from '../../contexts/ApiContext';
+import { useAppContext } from '../../contexts/AppContext';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -20,7 +20,7 @@ export default function UserEditDialog({user, open, setOpen, updateUser}) {
     const [role, setRole] = useState('');
     const [email, setEmail] = useState('');
     const [inProgress, setInProgress] = useState(false);
-    const api = useContext(ApiContext);
+    const {api} = useAppContext();
 
     useEffect(() => {
         setRole(user?.role || '');
