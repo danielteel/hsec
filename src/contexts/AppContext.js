@@ -5,6 +5,8 @@ import { userLogin, userMe, userLogout, userLogoutEverywhere, userChangePassword
 import { manageUsers, manageUserRole, manageUserEmail } from '../api/manage';
 import { camGetDetails, camAdd, camDelete, camUpdate } from '../api/cam';
 
+import { devicesList } from '../api/devices';
+
 
 
 function makeApiObject(setUserFn) {
@@ -48,6 +50,8 @@ function makeApiObject(setUserFn) {
         camAdd: async (obj) => checkForLogout(...await camAdd(obj)),
         camDelete: async (which) => checkForLogout(...await camDelete(which)),
         camUpdate: async (obj) => checkForLogout(...await camUpdate(obj)),
+
+        devicesList: async () => checkForLogout(...await devicesList())
     };
 }
 
