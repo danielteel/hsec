@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAppContext } from '../../contexts/AppContext';
 
 import Accordion from '@mui/material/Accordion';
@@ -11,6 +11,8 @@ export default function Devices(){
     const [devices, setDevices] = useState(null);
     const {api} = useAppContext();
     const [expanded, setExpanded] = useState(null);
+    const [selectedId, setSelectedId] = useState(null);
+    const imgRef = useRef(null);
 
     useEffect(() => {
         let timeoutId = null;
@@ -37,8 +39,31 @@ export default function Devices(){
         }
     }, [api]);
 
-    const handleChange = (panel) => (event, isExpanded) => {
-        setExpanded(isExpanded ? panel : null);
+    useEffect(() => {
+        let timeoutId = null;
+        let cancel=false;
+
+        async function updateImage() {
+            if (cancel) return;
+
+            imgRef.current.src='';
+            if (selectedId!=null){
+                imgRef.current.src='/api/devices/image/'+selectedId;
+            }
+
+            timeoutId = setTimeout(updateImage, 2000);
+        }
+        updateImage();
+
+        return () => {
+            cancel=true;
+            if (timeoutId) clearTimeout(timeoutId);
+        }
+    }, []);
+
+    const handleChange = (name, id) => (event, isExpanded) => {
+        setExpanded(isExpanded ? name : null);
+        setSelectedId(isExpanded ? id : null);
     };
 
     return <>
@@ -51,10 +76,9 @@ export default function Devices(){
                     <Typography>
                         {device.name}
                     </Typography>
-                    <img src={'/api/devices/image/'+device.device_id}/>
                 </AccordionDetails>
             </Accordion>
-
         ))}
+        <img ref={imgRef}/>
     </>
 }
