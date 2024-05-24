@@ -67,7 +67,7 @@ export default function Devices(){
         async function loadNext(){
             if (cancelling) return;
             const success = await updateImage();
-            timeoutId=setTimeout(loadNext, 2000);
+            timeoutId=setTimeout(loadNext, 1250);
         }
 
         loadNext();
