@@ -51,6 +51,7 @@ export default function Devices(){
                     <Typography>
                         {device.name}
                     </Typography>
+                    <img src={'/api/devices/image/'+device.device_id}/>
                 </AccordionDetails>
             </Accordion>
 
