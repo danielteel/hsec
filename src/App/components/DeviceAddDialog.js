@@ -33,6 +33,7 @@ export default function DeviceAddDialog({ api, devices, setDevices, open, setOpe
 
     useEffect( () => {
         if (open){
+            setName('');
             setEncroKey(generateRandomEncroKey());
             setError(null);
         }
