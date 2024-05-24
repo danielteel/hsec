@@ -68,7 +68,7 @@ export default function Devices(){
 
     return <>
         {devices?.map(device => (
-            <Accordion expanded={expanded === device.name} onChange={handleChange(device.name)}>
+            <Accordion expanded={expanded === device.name} onChange={handleChange(device.name, device.device_id)}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography>{device.name}</Typography>
                 </AccordionSummary>
