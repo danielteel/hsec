@@ -125,8 +125,10 @@ export default function AddFormatDialog({ api, formats, setFormats, open, setOpe
                 <TextField disabled={!!inProgress||type!=='hls'}  fullWidth margin='dense' label='Block'   value={block}   onChange={e=>setBlock(getNumberLiteral(e.target.value))}/>
                 <TextField disabled={!!inProgress}                fullWidth margin='dense' label='Filter'  value={filter}  onChange={e=>setFilter(e.target.value)}/>
             </DialogContent>
+            <DialogActions disableSpacing>
+                <Alert style={error?{width:'100%'}:{display: 'none'}} variant='filled' severity={'error'}>{error}</Alert>
+            </DialogActions>
             <DialogActions>
-                {error}
                 <Button        disabled={!!inProgress}           variant='contained' color='primary' onClick={handleClose}>Cancel</Button>
                 <LoadingButton disabled={!!inProgress && inProgress!=='adding'} loading={inProgress==='adding'} variant='contained' color='success' onClick={handleAdd}>Add</LoadingButton>
             </DialogActions>
