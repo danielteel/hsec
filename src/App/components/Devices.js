@@ -99,7 +99,7 @@ export default function Devices(){
             :
                 selectedDevice?.actions?.map( action => {
                     if (action.type.toLowerCase().trim()==='void'){
-                        return <Button onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, null)}>{action.title}</Button>
+                        return <Button variant='contained' onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, null)}>{action.title}</Button>
                     }else if (action.type.toLowerCase().trim()==='byte'){
                         return <Button onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, null)}>{action.title}</Button>
                     }
