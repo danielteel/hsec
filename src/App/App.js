@@ -12,6 +12,8 @@ import Container from '@mui/material/Container';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import HomeIcon from '@mui/icons-material/Home';
+import SettingsRemoteIcon from '@mui/icons-material/SettingsRemote';
+import SettingsCellIcon from '@mui/icons-material/SettingsCell';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -108,11 +110,13 @@ function hrefMatchesLocation(href, location){
 }
 
 const navigationItems = [
-    {text: 'home',      href: '/',         minRole:'unverified',    icon: <HomeIcon/>},
-    {text: 'video',     href: '/video',    minRole:'member',        icon: <OndemandVideoIcon/>},
-    {text: 'users',     href: '/users',    minRole:'manager',       icon: <PeopleIcon/>},
-    {text: 'settings',  href: '/settings', minRole:'admin',         icon: <DisplaySettingsIcon/>},
-    {text: 'profile',   href: '/profile',  minRole:'unverified',    icon: <AccountCircleIcon/>},
+    {text: 'home',          href: '/',         minRole:'unverified',    icon: <HomeIcon/>},
+    {text: 'video',         href: '/video',    minRole:'member',        icon: <OndemandVideoIcon/>},
+    {text: 'devices',       href: '/devices',  minRole:'member',        icon: <SettingsRemoteIcon/>},
+    {text: 'users',         href: '/users',    minRole:'manager',       icon: <PeopleIcon/>},
+    {text: 'settings',      href: '/settings', minRole:'admin',         icon: <DisplaySettingsIcon/>},
+    {text: 'managedevices', href: '/managedevs',minRole:'admin',        icon: <SettingsCellIcon/>},
+    {text: 'profile',       href: '/profile',  minRole:'unverified',    icon: <AccountCircleIcon/>},
 ];
 
 export default function App() {

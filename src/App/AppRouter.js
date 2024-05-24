@@ -7,6 +7,9 @@ import { Redirect } from 'wouter';
 import Video from "./components/Video";
 import Profile from "./components/Profile";
 
+import Devices from './components/Devices';
+import ManageDevices from './components/ManageDevices';
+
 
 function RedirectWithParams({to, params}){
     const inParams = useParams();
@@ -25,6 +28,8 @@ export default function AppRouter(){
                 <Route path='/settings'><Settings/></Route>
                 <Route path='/video/:title?/:type?'><Video/></Route>
                 <Route path='/profile/:email?/:confirmCode?'><Profile/></Route>
+                <Route path='/devices'><Devices/></Route>
+                <Route path='/managedevs'><ManageDevices/></Route>
                 <Route path='/'>Home</Route>
                 <Route><Redirect to={'/'}/></Route>
             </Switch>

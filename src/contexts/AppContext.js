@@ -5,7 +5,7 @@ import { userLogin, userMe, userLogout, userLogoutEverywhere, userChangePassword
 import { manageUsers, manageUserRole, manageUserEmail } from '../api/manage';
 import { camGetDetails, camAdd, camDelete, camUpdate } from '../api/cam';
 
-import { devicesList } from '../api/devices';
+import { devicesList, devicesImage, devicesAdd, devicesUpdate, devicesDelete, devicesAction } from '../api/devices';
 
 
 
@@ -51,7 +51,13 @@ function makeApiObject(setUserFn) {
         camDelete: async (which) => checkForLogout(...await camDelete(which)),
         camUpdate: async (obj) => checkForLogout(...await camUpdate(obj)),
 
-        devicesList: async () => checkForLogout(...await devicesList())
+        devicesList: async () => checkForLogout(...await devicesList()),
+        devicesImage: async (id) => checkForLogout(...await devicesImage(id)),
+        devicesAdd: async (name, encroKey) => checkForLogout(...await devicesAdd(name, encroKey)),
+        devicesUpdate: async (id, name, encroKey) => checkForLogout(...await devicesUpdate(id, name, encroKey)),
+        devicesDelete: async (id) => checkForLogout(...await devicesDelete(id)),
+        devicesAction: async (id, action, data) => checkForLogout(...await devicesAction(id, action, data)),
+
     };
 }
 
