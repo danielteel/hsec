@@ -14,31 +14,35 @@ import DeviceAddDialog from './DeviceAddDialog';
 
 export default function ManageDevices() {
     const [devices, setDevices] = useState(null);
-    const [editOpen, setEditOpen] = useState(false);
+    const [editItem, setEditItem] = useState({ open: false, item: null });
     const [addOpen, setAddOpen] = useState(false);
-    const [editDevice, setEditDevice] = useState(null);
 
     const {api} = useAppContext();
-
+  
     useEffect(() => {
+        let timeoutId = null;
+        let cancel=false;
+
         async function getDevices() {
+            if (cancel) return;
             const [passed, fetchedDevices] = await api.devicesList();
             if (passed) {
                 setDevices(fetchedDevices);
+            } else {
+                timeoutId = setTimeout(getDevices, 2000);
             }
         }
         getDevices();
-    }, [api]);
 
-    function updateDevice(device){
-        if (devices && device?.device_id){
-            setDevices([...devices.filter(d=>d.device_id!==device.device_id), device]);
+        return () => {
+            cancel=true;
+            if (timeoutId) clearTimeout(timeoutId);
         }
-    }
+    }, [api]);
 
     return (
         <Container maxWidth='sm'>
-            <DeviceEditDialog updateDevice={updateDevice} open={editOpen} setOpen={setEditOpen} device={editDevice}/>
+            <DeviceEditDialog api={api} devices={devices} setDevices={setDevices} editItem={editItem} setEditItem={() => setEditItem({ open: false, item: null })} />
             <DeviceAddDialog api={api} devices={devices} setDevices={setDevices} open={addOpen} setOpen={setAddOpen}/>
             <Paper sx={{p:1, m:-2, display: 'flex', flexDirection: 'column'}}>
                 <Title>Manage Devices</Title>
@@ -57,7 +61,7 @@ export default function ManageDevices() {
                                 <Grid item xs={6}><Typography style={{overflowWrap:'anywhere'}} variant='body2'>{d.name}</Typography></Grid>
                                 <Grid item xs={4}><Typography style={{overflowWrap:'anywhere'}} variant='body2'>{d.encro_key}</Typography></Grid>
                                 <Grid item xs={2} textAlign='center'>
-                                    <IconButton color="primary" onClick={()=>{setEditDevice(d); setEditOpen(true)}}>
+                                    <IconButton color="primary" onClick={() => setEditItem({ open: true, item: d })}>
                                         <EditIcon />
                                     </IconButton>
                                 </Grid>
