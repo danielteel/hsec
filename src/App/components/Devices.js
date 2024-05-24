@@ -4,6 +4,7 @@ import { useAppContext } from '../../contexts/AppContext';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
+import { Button } from '@mui/material';
 
 export default function Devices(){
     const [devices, setDevices] = useState(null);
@@ -92,7 +93,18 @@ export default function Devices(){
                 <Tab value={device} label={device.name} disabled={!device.connected}/>
             ))}
         </Tabs>
-
+        {
+            selectedDevice===null ?
+                null
+            :
+                selectedDevice?.actions?.map( action => {
+                    if (action.type.toLowerCase().trim()==='void'){
+                        return <Button onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, null)}>{action.title}</Button>
+                    }else if (action.type.toLowerCase().trim()==='byte'){
+                        return <Button onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, null)}>{action.title}</Button>
+                    }
+                })
+        }
         <img ref={imgRef}/>
     </>
 }
