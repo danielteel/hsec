@@ -8,7 +8,8 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { Alert, LoadingButton } from '@mui/lab';
+import { LoadingButton } from '@mui/lab';
+import { Alert } from '@mui/material';
 
 import { Link as WouterLink } from 'wouter';
 import Copyright from '../common/Copyright';
