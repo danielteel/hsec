@@ -1,17 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAppContext } from '../../contexts/AppContext';
 
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function Devices(){
     const [devices, setDevices] = useState(null);
     const {api} = useAppContext();
-    const [expanded, setExpanded] = useState(null);
-    const [selectedId, setSelectedId] = useState(null);
+    const [selectedDevice, setSelectedDevice] = useState(null);
     const imgRef = useRef(null);
 
     useEffect(() => {
@@ -22,10 +19,6 @@ export default function Devices(){
             if (cancel) return;
             let [passed, fetchedDevices] = await api.devicesList();
             if (passed) {
-                fetchedDevices=fetchedDevices.filter(device => {
-                    if (device.connected) return true;
-                    return false;
-                });
                 setDevices(fetchedDevices);
             } else {
                 timeoutId = setTimeout(getDevices, 2000);
@@ -39,46 +32,67 @@ export default function Devices(){
         }
     }, [api]);
 
-    useEffect(() => {
+
+    useEffect(()=>{
+        if (!imgRef || !imgRef.current) return;
         let timeoutId = null;
-        let cancel=false;
+        let lastBlob=null;
+        let cancelling = false;
 
-        async function updateImage() {
-            if (cancel) return;
-
-            imgRef.current.src='';
-            if (selectedId!=null){
-                imgRef.current.src='/api/devices/image/'+selectedId;
+        async function updateImage(){
+            try {
+                const options={
+                    credentials: 'include',
+                    method: "GET",
+                    cache: "no-cache",
+                }
+                const response = await fetch('/api/devices/image/'+selectedDevice.device_id, options);
+                const blob = await response.blob();
+                const newBlob = URL.createObjectURL(blob);
+                imgRef.current.src=newBlob;
+                try{
+                    if (lastBlob) URL.revokeObjectURL(lastBlob);
+                }catch(e){
+                    console.error(e);
+                }
+                lastBlob=newBlob;
+                return true;
+            }catch(e){
+                console.error(e);
+                return false;
             }
-
-            timeoutId = setTimeout(updateImage, 2000);
         }
-        updateImage();
 
-        return () => {
-            cancel=true;
-            if (timeoutId) clearTimeout(timeoutId);
+        async function loadNext(){
+            if (cancelling) return;
+            const success = await updateImage();
+            timeoutId=setTimeout(loadNext, 2000);
         }
-    }, []);
 
-    const handleChange = (name, id) => (event, isExpanded) => {
-        setExpanded(isExpanded ? name : null);
-        setSelectedId(isExpanded ? id : null);
+        loadNext();
+
+        return ()=>{
+            cancelling=true;
+            try{
+                if (lastBlob) URL.revokeObjectURL(lastBlob);
+            }catch{}
+            if (timeoutId){
+                clearTimeout(timeoutId);
+            }
+        }
+    }, [selectedDevice]);
+
+    const handleChange = (event, newValue) => {
+        setSelectedDevice(newValue);
     };
 
     return <>
-        {devices?.map(device => (
-            <Accordion expanded={expanded === device.name} onChange={handleChange(device.name, device.device_id)}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography>{device.name}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Typography>
-                        {device.name}
-                    </Typography>
-                </AccordionDetails>
-            </Accordion>
-        ))}
+        <Tabs value={selectedDevice} onChange={handleChange}>
+            {devices?.map(device => (
+                <Tab value={device} label={device.name} disabled={!device.connected}/>
+            ))}
+        </Tabs>
+
         <img ref={imgRef}/>
     </>
 }
