@@ -4,7 +4,7 @@ import { useAppContext } from '../../contexts/AppContext';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
-import { Button, FormControlLabel, FormGroup } from '@mui/material';
+import { Button, Card, CardContent, CardHeader, CardMedia, CardActions, Collapse, FormControlLabel, FormGroup } from '@mui/material';
 import Switch from '@mui/material/Switch';
 
 export default function Devices(){
@@ -98,21 +98,33 @@ export default function Devices(){
                 <Tab value={device} label={device.name} disabled={!device.connected}/>
             ))}
         </Tabs>
-        <FormGroup>
-            <FormControlLabel label="Show Actions" control={<Switch checked={showActions} onChange={()=>setShowActions(!showActions)}/>}/>
-        </FormGroup>
         {
-            selectedDevice===null || !showActions?
+            !selectedDevice ?
                 null
             :
-                selectedDevice?.actions?.map( action => {
-                    if (action.type.toLowerCase().trim()==='void'){
-                        return <Button disabled={!showActions} variant='contained' onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, null)}>{action.title}</Button>
-                    }else if (action.type.toLowerCase().trim()==='byte'){
-                        return <Button disabled={!showActions} onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, null)}>{action.title}</Button>
-                    }
-                })
+                <Card sx={{maxWidth:'75dvw'}}>
+                    <CardHeader title={selectedDevice.name}/>
+                    <CardMedia component='img' ref={imgRef}/>
+                    <CardActions>
+                        <FormGroup>
+                            <FormControlLabel label="Show Actions" control={<Switch checked={showActions} onChange={()=>setShowActions(!showActions)}/>}/>
+                        </FormGroup>
+                    </CardActions>
+                    <CardContent>
+                    {
+                        !showActions ?
+                            null
+                        :
+                            selectedDevice?.actions?.map( action => {
+                                if (action.type.toLowerCase().trim()==='void'){
+                                    return <Button variant='contained' onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, null)}>{action.title}</Button>
+                                }else if (action.type.toLowerCase().trim()==='byte'){
+                                    return <Button onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, null)}>{action.title}</Button>
+                                }
+                            })
+                        }
+                    </CardContent>
+                </Card>
         }
-        <img ref={imgRef}/>
     </>
 }
