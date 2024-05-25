@@ -4,12 +4,14 @@ import { useAppContext } from '../../contexts/AppContext';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
-import { Button } from '@mui/material';
+import { Button, FormControlLabel, FormGroup } from '@mui/material';
+import Switch from '@mui/material/Switch';
 
 export default function Devices(){
     const [devices, setDevices] = useState(null);
     const {api} = useAppContext();
     const [selectedDevice, setSelectedDevice] = useState(null);
+    const [safetyOff, setSafetyOff] = useState(false);
     const imgRef = useRef(null);
 
     useEffect(() => {
@@ -93,15 +95,18 @@ export default function Devices(){
                 <Tab value={device} label={device.name} disabled={!device.connected}/>
             ))}
         </Tabs>
+        <FormGroup>
+            <FormControlLabel label="Safety off" control={<Switch checked={safetyOff} onChange={()=>setSafetyOff(!safetyOff)}/>}/>
+        </FormGroup>
         {
             selectedDevice===null ?
                 null
             :
                 selectedDevice?.actions?.map( action => {
                     if (action.type.toLowerCase().trim()==='void'){
-                        return <Button variant='contained' onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, null)}>{action.title}</Button>
+                        return <Button disabled={!safetyOff} variant='contained' onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, null)}>{action.title}</Button>
                     }else if (action.type.toLowerCase().trim()==='byte'){
-                        return <Button onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, null)}>{action.title}</Button>
+                        return <Button disabled={!safetyOff} onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, null)}>{action.title}</Button>
                     }
                 })
         }
