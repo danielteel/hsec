@@ -99,7 +99,7 @@ export default function Devices(){
             ))}
         </Tabs>
         <FormGroup>
-            <FormControlLabel label="Show Actions" control={<Switch checked={safetyOff} onChange={()=>setSafetyOff(!safetyOff)}/>}/>
+            <FormControlLabel label="Show Actions" control={<Switch checked={showActions} onChange={()=>setShowActions(!showActions)}/>}/>
         </FormGroup>
         {
             selectedDevice===null || !showActions?
