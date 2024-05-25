@@ -4,7 +4,7 @@ import { useAppContext } from '../../contexts/AppContext';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
-import { Button, Card, CardContent, CardHeader, CardMedia, CardActions, Collapse, FormControlLabel, FormGroup } from '@mui/material';
+import { Button, Card, CardContent, CardHeader, CardMedia, CardActions, Collapse, FormControlLabel, FormGroup, Input } from '@mui/material';
 import Switch from '@mui/material/Switch';
 
 export default function Devices(){
@@ -119,7 +119,12 @@ export default function Devices(){
                                 if (action.type.toLowerCase().trim()==='void'){
                                     return <Button variant='contained' onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, null)}>{action.title}</Button>
                                 }else if (action.type.toLowerCase().trim()==='byte'){
-                                    return <Button onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, null)}>{action.title}</Button>
+                                    return <>
+                                        <Input id={"devinput_"+action.title}></Input>
+                                        <Button onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, window.getElementById("devinput_"+action.title))}>
+                                            {action.title}
+                                        </Button>
+                                    </> 
                                 }
                             })
                         }
