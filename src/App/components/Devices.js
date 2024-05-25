@@ -23,6 +23,9 @@ export default function Devices(){
             let [passed, fetchedDevices] = await api.devicesList();
             if (passed) {
                 setDevices(fetchedDevices);
+                if (fetchedDevices.length){
+                    setSelectedDevice(fetchedDevices[0]);
+                }
             } else {
                 timeoutId = setTimeout(getDevices, 2000);
             }
