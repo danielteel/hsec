@@ -11,7 +11,7 @@ export default function Devices(){
     const [devices, setDevices] = useState(null);
     const {api} = useAppContext();
     const [selectedDevice, setSelectedDevice] = useState(null);
-    const [safetyOff, setSafetyOff] = useState(false);
+    const [showActions, setShowActions] = useState(false);
     const imgRef = useRef(null);
 
     useEffect(() => {
@@ -99,17 +99,17 @@ export default function Devices(){
             ))}
         </Tabs>
         <FormGroup>
-            <FormControlLabel label="Safety off" control={<Switch checked={safetyOff} onChange={()=>setSafetyOff(!safetyOff)}/>}/>
+            <FormControlLabel label="Show Actions" control={<Switch checked={safetyOff} onChange={()=>setSafetyOff(!safetyOff)}/>}/>
         </FormGroup>
         {
-            selectedDevice===null ?
+            selectedDevice===null || !showActions?
                 null
             :
                 selectedDevice?.actions?.map( action => {
                     if (action.type.toLowerCase().trim()==='void'){
-                        return <Button disabled={!safetyOff} variant='contained' onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, null)}>{action.title}</Button>
+                        return <Button disabled={!showActions} variant='contained' onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, null)}>{action.title}</Button>
                     }else if (action.type.toLowerCase().trim()==='byte'){
-                        return <Button disabled={!safetyOff} onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, null)}>{action.title}</Button>
+                        return <Button disabled={!showActions} onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, null)}>{action.title}</Button>
                     }
                 })
         }
