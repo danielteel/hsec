@@ -4,7 +4,7 @@ import { useAppContext } from '../../contexts/AppContext';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
-import { Button, Card, CardContent, CardHeader, CardMedia, CardActions, Collapse, FormControlLabel, FormGroup, Input } from '@mui/material';
+import { Button, Card, CardContent, CardHeader, CardMedia, CardActions, Collapse, FormControlLabel, FormGroup, Input, Stack, Paper } from '@mui/material';
 import Switch from '@mui/material/Switch';
 
 export default function Devices(){
@@ -115,18 +115,26 @@ export default function Devices(){
                         !showActions ?
                             null
                         :
+                            <Stack>
+                            {
                             selectedDevice?.actions?.map( action => {
                                 if (action.type.toLowerCase().trim()==='void'){
-                                    return <Button variant='contained' onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, null)}>{action.title}</Button>
+                                    return  <Paper>
+                                                <Button variant='contained' onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, null)}>
+                                                    {action.title}
+                                                </Button>
+                                            </Paper> 
                                 }else if (action.type.toLowerCase().trim()==='byte'){
-                                    return <>
-                                        <Input id={"devinput_"+action.title}></Input>
-                                        <Button onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, window.getElementById("devinput_"+action.title).value)}>
-                                            {action.title}
-                                        </Button>
-                                    </> 
+                                    return  <Paper>
+                                                <Input id={"devinput_"+action.title}></Input>
+                                                <Button onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, document.getElementById("devinput_"+action.title).value)}>
+                                                    {action.title}
+                                                </Button>
+                                            </Paper> 
                                 }
                             })
+                            }
+                            </Stack>
                         }
                     </CardContent>
                 </Card>
