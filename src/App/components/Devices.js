@@ -4,7 +4,7 @@ import { useAppContext } from '../../contexts/AppContext';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
-import { Button, Card, CardContent, CardHeader, CardMedia, CardActions, Collapse, FormControlLabel, FormGroup, Input, Stack, Paper } from '@mui/material';
+import { Button, Card, CardContent, CardHeader, CardMedia, CardActions, Collapse, FormControlLabel, FormGroup, Input, Stack, Paper, TextField } from '@mui/material';
 import Switch from '@mui/material/Switch';
 
 export default function Devices(){
