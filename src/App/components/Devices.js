@@ -121,7 +121,7 @@ export default function Devices(){
                                 }else if (action.type.toLowerCase().trim()==='byte'){
                                     return <>
                                         <Input id={"devinput_"+action.title}></Input>
-                                        <Button onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, window.getElementById("devinput_"+action.title))}>
+                                        <Button onClick={async () => await api.devicesAction(selectedDevice.device_id, action.title, window.getElementById("devinput_"+action.title).value)}>
                                             {action.title}
                                         </Button>
                                     </> 
