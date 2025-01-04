@@ -124,20 +124,15 @@ export default function Devices(){
                         </FormGroup>
                     </CardActions>
                     <CardContent>
-                        {
-                            !weather?
-                                null
-                            :
-                                <Stack>
-                                    {
-                                        weather?.entries?.().map( ([k, v])=>{
-                                            return  <Paper>
-                                                        {k+': '+v}
-                                                    </Paper>
-                                        })
-                                    }
-                                </Stack>
-                        }
+                        <Stack>
+                            {
+                                Object.entries(weather || {}).map( ([k, v])=>{
+                                    return  <Paper>
+                                                {k+': '+v}
+                                            </Paper>
+                                })
+                            }
+                        </Stack>
                     {
                         !showActions ?
                             null
