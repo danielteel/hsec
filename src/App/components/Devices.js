@@ -125,7 +125,7 @@ export default function Devices(){
                             :
                                 <Stack>
                                     {
-                                        weather.entries().map( ([k, v])=>{
+                                        weather?.entries?.().map( ([k, v])=>{
                                             return  <Paper>
                                                         {k+': '+v}
                                                     </Paper>
