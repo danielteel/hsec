@@ -5,7 +5,7 @@ import { userLogin, userMe, userLogout, userLogoutEverywhere, userChangePassword
 import { manageUsers, manageUserRole, manageUserEmail } from '../api/manage';
 import { camGetDetails, camAdd, camDelete, camUpdate } from '../api/cam';
 
-import { devicesList, devicesImage, devicesAdd, devicesUpdate, devicesDelete, devicesAction } from '../api/devices';
+import { devicesList, devicesImage, devicesWeather, devicesAdd, devicesUpdate, devicesDelete, devicesAction } from '../api/devices';
 
 
 
@@ -53,6 +53,7 @@ function makeApiObject(setUserFn) {
 
         devicesList: async () => checkForLogout(...await devicesList()),
         devicesImage: async (id) => checkForLogout(...await devicesImage(id)),
+        devicesWeather: async (id) => checkForLogout(...await devicesWeather(id)),
         devicesAdd: async (name, encroKey) => checkForLogout(...await devicesAdd(name, encroKey)),
         devicesUpdate: async (id, name, encroKey) => checkForLogout(...await devicesUpdate(id, name, encroKey)),
         devicesDelete: async (id) => checkForLogout(...await devicesDelete(id)),

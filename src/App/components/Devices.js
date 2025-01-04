@@ -6,6 +6,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import { Button, Card, CardContent, CardHeader, CardMedia, CardActions, Collapse, FormControlLabel, FormGroup, Input, Stack, Paper, TextField } from '@mui/material';
 import Switch from '@mui/material/Switch';
+import { devicesWeather } from '../../api/devices';
 
 export default function Devices(){
     const [devices, setDevices] = useState(null);
@@ -13,6 +14,7 @@ export default function Devices(){
     const [selectedDevice, setSelectedDevice] = useState(null);
     const [showActions, setShowActions] = useState(false);
     const imgRef = useRef(null);
+    const [weather, setWeather] = useState({});
 
     useEffect(() => {
         let timeoutId = null;
@@ -24,7 +26,8 @@ export default function Devices(){
             if (passed) {
                 setDevices(fetchedDevices);
                 if (fetchedDevices.length){
-                    setSelectedDevice(fetchedDevices[0]);
+                    setSelectedDevice(fetchedDevices[0]);        
+                    setWeather({});
                 }
             } else {
                 timeoutId = setTimeout(getDevices, 2000);
@@ -38,6 +41,7 @@ export default function Devices(){
         }
     }, [api]);
 
+    
 
     useEffect(()=>{
         if (!imgRef || !imgRef.current) return;
@@ -56,6 +60,7 @@ export default function Devices(){
                 const blob = await response.blob();
                 const newBlob = URL.createObjectURL(blob);
                 imgRef.current.src=newBlob;
+                imgRef.current.style.display="block";
                 try{
                     if (lastBlob) URL.revokeObjectURL(lastBlob);
                 }catch(e){
@@ -64,6 +69,7 @@ export default function Devices(){
                 lastBlob=newBlob;
                 return true;
             }catch(e){
+                imgRef.current.style.display="none";
                 console.error(e);
                 return false;
             }
@@ -72,7 +78,8 @@ export default function Devices(){
         async function loadNext(){
             if (cancelling) return;
             const success = await updateImage();
-            timeoutId=setTimeout(loadNext, 1250);
+            setWeather(await devicesWeather(selectedDevice));
+            timeoutId=setTimeout(loadNext, 2000);
         }
 
         loadNext();
@@ -90,6 +97,7 @@ export default function Devices(){
 
     const handleChange = (event, newValue) => {
         setSelectedDevice(newValue);
+        setWeather({});
     };
 
     return <>
@@ -111,6 +119,20 @@ export default function Devices(){
                         </FormGroup>
                     </CardActions>
                     <CardContent>
+                        {
+                            !weather?
+                                null
+                            :
+                                <Stack>
+                                    {
+                                        weather.entries().map( ([k, v])=>{
+                                            return  <Paper>
+                                                        {k+': '+v}
+                                                    </Paper>
+                                        })
+                                    }
+                                </Stack>
+                        }
                     {
                         !showActions ?
                             null

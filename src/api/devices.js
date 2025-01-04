@@ -47,6 +47,16 @@ export async function devicesImage(id){
     }
     return [false, 'failed', 400];
 }
+
+export async function devicesWeather(id){
+    try {
+        const response = await fetch('/api/devices/weather/'+id, {credentials: 'include', method: 'GET', cache: 'no-cache'});
+        return [response.status>=200 && response.status<=299, await response.json(), response.status];
+    }catch(e){
+    }
+    return [false, 'failed', 400];
+}
+
 export async function devicesAdd(name, encroKey){
     try{
         const options = {
