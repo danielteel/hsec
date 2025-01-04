@@ -77,8 +77,13 @@ export default function Devices(){
 
         async function loadNext(){
             if (cancelling) return;
-            const success = await updateImage();
-            setWeather(await devicesWeather(selectedDevice));
+            await updateImage();
+            const [success, values]=await devicesWeather(selectedDevice.device_id);
+            if (success){
+                setWeather(values);
+            }else{
+                setWeather({});
+            }
             timeoutId=setTimeout(loadNext, 2000);
         }
 
